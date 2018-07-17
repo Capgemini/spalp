@@ -28,8 +28,9 @@ function spalp_help($route_name, RouteMatchInterface $route_match) {
  */
 function spalp_theme() {
   return [
-    'spalp' => [
-      'render element' => 'children',
-    ],
+    'node__applanding' => [
+      'template' => 'node--applanding',
+      'base hook' => 'node',
+    ]
   ];
 }
