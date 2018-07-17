@@ -3,13 +3,15 @@ status: true
 dependencies:
   module:
     - node
-    - text
-id: node.field_supporting_content
-field_name: field_supporting_content
+    - options
+id: node.field_spalp_app_id
+field_name: field_spalp_app_id
 entity_type: node
-type: text_long
-settings: {  }
-module: text
+type: list_string
+settings:
+  allowed_values: {  }
+  allowed_values_function: 'spalp_get_app_ids'
+module: options
 locked: false
 cardinality: 1
 translatable: true

@@ -3,9 +3,11 @@ status: true
 dependencies:
   config:
     - field.field.node.applanding.body
+    - field.field.node.applanding.field_spalp_app_id
     - field.field.node.applanding.field_supporting_content
     - node.type.applanding
   module:
+    - options
     - text
     - user
 id: node.applanding.default
@@ -19,6 +21,13 @@ content:
     weight: 101
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_spalp_app_id:
+    weight: 103
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: list_default
     region: content
   field_supporting_content:
     weight: 102

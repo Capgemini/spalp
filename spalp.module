@@ -5,7 +5,9 @@
  * Contains spalp.module.
  */
 
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\field\Entity\FieldStorageConfig;
 
 /**
  * Implements hook_help().
@@ -33,4 +35,31 @@ function spalp_theme() {
       'base hook' => 'node',
     ]
   ];
+}
+
+/**
+ * Set dynamic allowed values for the app ID field.
+ *
+ * @param \Drupal\field\Entity\FieldStorageConfig $definition
+ *   The field definition.
+ * @param \Drupal\Core\Entity\ContentEntityInterface|null $entity
+ *   The entity being created if applicable.
+ * @param bool $cacheable
+ *   Boolean indicating if the results are cacheable.
+ *
+ * @return array
+ *   An array of possible key and value options.
+ *
+ * @see options_allowed_values()
+ */
+function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
+
+  // TODO: actually get this from the modules that implement the hook.
+  $ids = [
+    1,
+    2,
+    3,
+  ];
+
+  return $ids;
 }
