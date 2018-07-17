@@ -54,12 +54,9 @@ function spalp_theme() {
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
 
-  // TODO: actually get this from the modules that implement the hook.
-  $ids = [
-    1,
-    2,
-    3,
-  ];
+  $ids = [];
+
+  \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
 
   return $ids;
 }
