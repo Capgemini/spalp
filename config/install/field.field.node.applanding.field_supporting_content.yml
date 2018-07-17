@@ -1,0 +1,20 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_supporting_content
+    - node.type.applanding
+  module:
+    - text
+id: node.applanding.field_supporting_content
+field_name: field_supporting_content
+entity_type: node
+bundle: applanding
+label: 'Supporting Content'
+description: "Content to support the app.\r\nBy default, this will be included within a <code>&lt;noscript&gt;</code> tag."
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

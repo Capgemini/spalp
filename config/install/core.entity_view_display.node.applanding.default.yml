@@ -1,0 +1,33 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.applanding.body
+    - field.field.node.applanding.field_supporting_content
+    - node.type.applanding
+  module:
+    - text
+    - user
+id: node.applanding.default
+targetEntityType: node
+bundle: applanding
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_supporting_content:
+    weight: 102
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden: {  }

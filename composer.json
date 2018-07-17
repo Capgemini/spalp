@@ -1,0 +1,14 @@
+{
+  "name": "drupal/spalp",
+  "type": "drupal-module",
+  "description": "This module provides a way for site managers to configure and serve single-page applications as pages in a Drupal site.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/spalp",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/spalp",
+    "source": "http://cgit.drupalcode.org/spalp"
+  },
+  "require": { }
+}

@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains spalp.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function spalp_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the spalp module.
+    case 'help.page.spalp':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This module provides a way for site managers to configure and serve single-page applications as pages in a Drupal site.') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function spalp_theme() {
+  return [
+    'spalp' => [
+      'render element' => 'children',
+    ],
+  ];
+}
