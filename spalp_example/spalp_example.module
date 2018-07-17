@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains spalp_example.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function spalp_example_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the spalp_example module.
+    case 'help.page.spalp_example':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Example module for Single Page App Landing Page') . '</p>';
+      return $output;
+
+    default:
+  }
+}
