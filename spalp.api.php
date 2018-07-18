@@ -16,5 +16,7 @@
  *   The available app IDs.
  */
 function hook_spalp_app_ids_alter(&$ids) {
-  $ids[] = 'mymodule_app_id';
+  // Your module should add its machine name to the $ids array.
+  // This code is equivalent to $ids[] = 'mymodule';
+  $ids[] = basename(__FILE__, '.module');
 }

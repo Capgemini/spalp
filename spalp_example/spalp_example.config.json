@@ -1,0 +1,14 @@
+{
+  "config": {
+    "apiKey": 12345,
+    "endpoint": "https://www.example.com/example"
+  },
+  "app_text": {
+    "en-gb": {
+      "firstField": "blah"
+    },
+    "fr": {
+      "firstField": "blahblah"
+    }
+  }
+}

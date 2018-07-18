@@ -57,6 +57,5 @@ function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterfac
   $ids = [];
 
   \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
-
-  return $ids;
+  return array_combine($ids, $ids);
 }
