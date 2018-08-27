@@ -11,7 +11,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * @package Drupal\spalp\EventSubscriber
  */
 class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
-    const APP_ID = "spalp_example";
 
     /**
     * {@inheritdoc}
@@ -28,7 +27,7 @@ class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
    * @param \Drupal\spalp\Event\SpalpAppIdsAlterEvent $event
    */
   public function doAppIdsListAlter(SpalpAppIdsAlterEvent $event) {
-      $event->ids[self::APP_ID] = self::APP_ID;
+      $event->ids[SPALP_EXAMPLE_APP_ID] = SPALP_EXAMPLE_APP_ID;
   }
 
 }
