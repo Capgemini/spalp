@@ -1,0 +1,5 @@
+services:
+  spalp_example.app_ids_alter:
+    class: Drupal\spalp_example\EventSubscriber\SpalpExampleAppIdsAlterSubscriber
+    tags:
+      - { name: 'event_subscriber' }
