@@ -1,4 +1,5 @@
 <?php
+
 namespace Drupal\spalp_example\EventSubscriber;
 
 use Drupal\spalp\Event\SpalpAppIdsAlterEvent;
@@ -12,12 +13,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
 
   /**
-   *
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     return [
-      SpalpAppIdsAlterEvent::EVENT_APP_IDS_ALTER => 'doAppIdsListAlter'
+      SpalpAppIdsAlterEvent::EVENT_APP_IDS_ALTER => 'doAppIdsListAlter',
     ];
   }
 
