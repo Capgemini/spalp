@@ -25,6 +25,7 @@ class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
    * React to app id alter event to add this modules app id.
    *
    * @param \Drupal\spalp\Event\SpalpAppIdsAlterEvent $event
+   *   Spalp App Ids Alter Event.
    */
   public function doAppIdsListAlter(SpalpAppIdsAlterEvent $event) {
     $event->ids[SPALP_EXAMPLE_APP_ID] = SPALP_EXAMPLE_APP_ID;
