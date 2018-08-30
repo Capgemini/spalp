@@ -16,8 +16,10 @@ All relevant configuration would be stored on this node.
 TODO: define app element ID to be replaced by JS
 
 ## Extending the module
+See the spalp_example module for a simple implementation.
+
 Create a module that implements `hook_spalp_app_ids`.
 
 Default configuration and application text should be stored in mymodule.config.json
 
-The spalp_example module shows how this can be done. 
+Define a library for your assets as per https://www.drupal.org/docs/8/creating-custom-modules/adding-stylesheets-css-and-javascript-js-to-a-drupal-8-module - the library name should match your module's machine name - the spalp module will then take care of attaching the library when the app landing node is viewed.
