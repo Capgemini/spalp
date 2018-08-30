@@ -98,8 +98,9 @@ function spalp_create_nodes($module) {
   $node->enforceIsNew();
   $node->save();
 
-  \Drupal::messenger()->addMessage(t('Node @nid has been created for @title', [
+  \Drupal::logger('spalp')->notice(t('Node @nid has been created for @title (@module)', [
     '@title' => $title,
+    '@module' => $module,
     '@nid' => $node->id(),
   ]));
 }
