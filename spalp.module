@@ -8,6 +8,7 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -58,4 +59,47 @@ function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterfac
 
   \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
   return array_combine($ids, $ids);
+}
+
+/**
+ * Implements hook_modules_installed().
+ */
+function spalp_modules_installed($modules) {
+  $module_list = system_rebuild_module_data();
+
+  foreach ($modules as $module) {
+    // Does the module have a dependency on spalp?
+    $dependencies = array_keys($module_list[$module]->requires);
+    if (in_array('spalp', $dependencies)) {
+      spalp_create_nodes($module);
+    }
+  }
+}
+
+/**
+ * Create applanding nodes in each language when a module is enabled.
+ *
+ * @param string $module
+ *   The machine name of the module being installed.
+ *
+ * @throws \Drupal\Core\Entity\EntityStorageException
+ */
+function spalp_create_nodes($module) {
+  // TODO: get config from YAML.
+  // TODO: translate the node.
+
+  $title = \Drupal::moduleHandler()->getName($module);
+
+  $node = Node::create(['type' => 'applanding']);
+  $node->set('title', $title);
+  $node->set('field_spalp_app_id', $module);
+  // The node should initially be unpublished.
+  $node->status = 0;
+  $node->enforceIsNew();
+  $node->save();
+
+  \Drupal::messenger()->addMessage(t('Node @nid has been created for @title', [
+    '@title' => $title,
+    '@nid' => $node->id(),
+  ]));
 }
