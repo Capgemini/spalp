@@ -32,7 +32,7 @@ function spalp_theme() {
     'node__applanding' => [
       'template' => 'node--applanding',
       'base hook' => 'node',
-    ],
+    ]
   ];
 }
 
