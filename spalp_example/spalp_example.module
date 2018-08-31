@@ -5,7 +5,9 @@
  * Contains spalp_example.module.
  */
 
-define("SPALP_EXAMPLE_APP_ID", "spalp_example");
+define('SPALP_EXAMPLE_APP_ID', 'spalp_example');
+
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().

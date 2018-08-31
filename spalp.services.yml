@@ -1,0 +1,4 @@
+services:
+  spalp.spalpconfig:
+    class: Drupal\spalp\Service\SpalpConfig
+    arguments: ["@event_dispatcher"]

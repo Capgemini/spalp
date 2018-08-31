@@ -8,8 +8,6 @@
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\spalp\Event\SpalpAppIdsAlterEvent;
-
 /**
  * Implements hook_help().
  */
@@ -52,14 +50,5 @@ function spalp_theme() {
  *   An array of possible key and value options.
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
-  // Reset app ids.
-  $ids = [];
-
-  // Instantiate the event and dispatch for changes.
-  $event = new SpalpAppIdsAlterEvent($ids);
-  $event_dispatcher = \Drupal::service('event_dispatcher');
-  $event_dispatcher->dispatch(SpalpAppIdsAlterEvent::EVENT_APP_IDS_ALTER, $event);
-
-  // Return updated ids from event.
-  return $event->ids;
+  return \Drupal::service('spalp.spalpconfig')->getAppIds();
 }

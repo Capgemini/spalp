@@ -8,7 +8,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Class SpalpExampleAppIdsAlterSubscriber.
  *
- * @package Drupal\spalp\EventSubscriber
+ * @package Drupal\spalp_example\EventSubscriber
  */
 class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
 
@@ -16,9 +16,8 @@ class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    return [
-      SpalpAppIdsAlterEvent::EVENT_APP_IDS_ALTER => 'doAppIdsListAlter',
-    ];
+    $events[SpalpAppIdsAlterEvent::APP_IDS_ALTER] = 'doAppIdsListAlter';
+    return $events;
   }
 
   /**
@@ -28,7 +27,7 @@ class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
    *   Spalp App Ids Alter Event.
    */
   public function doAppIdsListAlter(SpalpAppIdsAlterEvent $event) {
-    $event->ids[SPALP_EXAMPLE_APP_ID] = SPALP_EXAMPLE_APP_ID;
+    $event->registerId(SPALP_EXAMPLE_APP_ID);
   }
 
 }
