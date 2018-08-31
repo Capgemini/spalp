@@ -48,6 +48,8 @@ function spalp_theme() {
  *
  * @return array
  *   An array of possible key and value options.
+ *
+ * @see options_allowed_values()
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
   return \Drupal::service('spalp.spalpconfig')->getAppIds();
