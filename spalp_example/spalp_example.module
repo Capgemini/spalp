@@ -5,6 +5,8 @@
  * Contains spalp_example.module.
  */
 
+define('SPALP_EXAMPLE_APP_ID', 'spalp_example');
+
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -21,11 +23,4 @@ function spalp_example_help($route_name, RouteMatchInterface $route_match) {
 
     default:
   }
-}
-
-/**
- * Implements hook_spalp_app_ids_alter().
- */
-function spalp_example_spalp_app_ids_alter(&$ids) {
-  $ids[] = basename(__FILE__, '.module');
 }

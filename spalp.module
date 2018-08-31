@@ -72,11 +72,7 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
  * @see options_allowed_values()
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
-
-  $ids = [];
-
-  \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
-  return array_combine($ids, $ids);
+  return \Drupal::service('spalp.spalpconfig')->getAppIds();
 }
 
 /**
