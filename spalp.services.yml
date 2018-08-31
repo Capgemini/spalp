@@ -1,0 +1,4 @@
+services:
+  spalp.core:
+    class: Drupal\spalp\Service\Core
+    arguments: ["@logger.factory", '@module_handler']
