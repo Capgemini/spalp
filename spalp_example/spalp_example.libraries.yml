@@ -2,3 +2,5 @@ spalp_example:
   version: VERSION
   js:
     js/spalp_example.js: {}
+  dependencies:
+    - core/jquery
