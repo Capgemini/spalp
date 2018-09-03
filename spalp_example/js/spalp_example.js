@@ -6,11 +6,6 @@
  */
 
 (function ($, Drupal) {
-    Drupal.behaviors.spalpExample = {
-        attach: function (context, settings) {
-            Drupal.spalpExample.getConfig();
-        }
-    };
 
     Drupal.spalpExample = {};
 
@@ -29,7 +24,7 @@
      */
     Drupal.spalpExample.getConfig = function () {
         // TODO: get this from the node if it's available.
-        const configURL = '/modules/contrib/spalp/spalp_example/config/spalp_example.json'
+        const configURL = '/modules/contrib/spalp/spalp_example/spalp_example.config.json'
         let config = {}
 
         $.getJSON(
@@ -74,5 +69,7 @@
             $appWrapper.append(body);
         }
     };
+
+    Drupal.spalpExample.getConfig();
 
 })(jQuery, Drupal)

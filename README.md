@@ -13,13 +13,25 @@ A separate view mode would provide a JSON endpoint for configuration and text, t
 All relevant configuration would be stored on this node.
 
 
-TODO: define app element ID to be replaced by JS
+TODO: define app element ID to be replaced by JS - use the app ID for this?
 
 ## Extending the module
 See the spalp_example module for a simple implementation.
 
 Create a module that implements `hook_spalp_app_ids`.
 
-Default configuration and application text should be stored in mymodule.config.json
+The app ID provided by your module will be used as the ID of a <div> element on the node view.
+This can be used as your main app element.
 
+### Default configuration and application text
+Create a JSON file in your should be stored in mymodule.config.json.
+
+When your module is installed, an applanding node will be created for the module.
+
+The values of `appConfig` will be stored on the node's `field_spalp_app_config` field.
+The values of `appText` will be stored on the node's `field_spalp_app_text` field.
+
+See spalp_example.config.json for an example of the structure.
+
+### Adding your app's assets
 Define a library for your assets as per https://www.drupal.org/docs/8/creating-custom-modules/adding-stylesheets-css-and-javascript-js-to-a-drupal-8-module - the library name should match your module's machine name - the spalp module will then take care of attaching the library when the app landing node is viewed.
