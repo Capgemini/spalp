@@ -1,0 +1,15 @@
+{
+  "appConfig": {
+
+  },
+  "appText": {
+    "en": {
+      "heading": "This is the heading",
+      "body": "<p>This is the body</p><p>It contains multiple paragraphs</p>"
+    },
+    "fr": {
+      "heading": "C'est le titre",
+      "body": "<p>C'est le corps</p><p>Il contient plusieurs paragraphes</p>"
+    }
+  }
+}
