@@ -1,11 +1,11 @@
 {
   "appConfig": {
-
+    "bodyRepeat": 2
   },
   "appText": {
     "en": {
       "heading": "This is the heading",
-      "body": "<p>This is the body</p><p>It contains multiple paragraphs</p>"
+      "body": "<p>This is the body</p><p>It contains multiple paragraphs, and is repeated bodyRepeat times</p>"
     },
     "fr": {
       "heading": "C'est le titre",
