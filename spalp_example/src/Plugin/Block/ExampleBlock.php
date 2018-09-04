@@ -8,7 +8,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\spalp\Service\Core;
 
 /**
- * Provides a block to demonstrate how .
+ * Provides a block to demonstrate how spalp config can be used within Drupal.
  *
  * @Block(
  *  id = "spalp_example_block",
