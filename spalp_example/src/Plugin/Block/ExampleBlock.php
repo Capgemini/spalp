@@ -23,6 +23,7 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
    * @var \Drupal\spalp\Service\Core
    */
   protected $spalpCore;
+
   /**
    * Constructs a new ExampleBlock object.
    *
@@ -32,6 +33,8 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
    *   The plugin_id for the plugin instance.
    * @param string $plugin_definition
    *   The plugin implementation definition.
+   * @param \Drupal\spalp\Service\Core $spalp_core
+   *   The core service from the spalp module.
    */
   public function __construct(
     array $configuration,
@@ -42,6 +45,7 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->spalpCore = $spalp_core;
   }
+
   /**
    * {@inheritdoc}
    */
@@ -53,6 +57,7 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
       $container->get('spalp.core')
     );
   }
+
   /**
    * {@inheritdoc}
    */
@@ -61,10 +66,13 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
 
     $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-    $config = $this->spalpCore->getAppConfig('spalp_example', $language);
+    // Get the config from the relevant node.
+    $config_and_text = $this->spalpCore->getAppConfig('spalp_example', $language);
 
-    $app_text = $config->appText->{$language};
+    // Split out the app text for easier access.
+    $app_text = $config_and_text->appText->{$language};
 
+    // App text for the current language is now available as an object.
     $build['spalp_example_block']['#markup'] = '<h2>' . $app_text->heading . '</h2>' . $app_text->body;
 
     return $build;

@@ -58,8 +58,6 @@ class Core {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createNodes($module) {
-    // TODO: get config from YAML.
-    // TODO: translate the node.
     $title = $this->moduleHandler->getName($module);
 
     $node = Node::create(['type' => 'applanding']);
@@ -68,8 +66,12 @@ class Core {
 
     // Import the configuration and text.
     $json = $this->getConfigFromJson($module);
+
+    // TODO: translate the node.
+    $language = 'en';
     if (!empty($json)) {
-      $app_text_string = json_encode($json->appText);
+      $app_text = $json->appText;
+      $app_text_string = json_encode($app_text->{$language});
       $node->set('field_spalp_app_text', $app_text_string);
 
       $app_config_string = json_encode($json->appConfig);
@@ -131,19 +133,20 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAppConfig($module, $language) {
+
+    $config = new \StdClass();
+
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
-    $app_config = $node->get('field_spalp_app_config')->value();
-    $app_text = $node->get('field_spalp_app_text')->value();
+    if (!empty($node)) {
+      $app_config = $node->field_spalp_app_config->value;
+      $app_text = $node->field_spalp_app_text->value;
 
-    $config = [
-      'appConfig' => $app_config,
-      'appText' => [
-        $language => $app_text,
-      ]
-    ];
+      $config->appConfig = json_decode($app_config);
+      $config->appText = json_decode($app_text);
+    }
 
-    return json_encode($config);
+    return $config;
   }
 
   /**
@@ -155,6 +158,8 @@ class Core {
    *   The language code.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The relevant applanding node.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -162,7 +167,6 @@ class Core {
     // TODO: dependency injection.
     // TODO: prevent more than one node per language being created for each app.
     // TODO: filter by language.
-
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'applanding')
       ->condition('field_spalp_app_id', $module);
