@@ -116,4 +116,64 @@ class Core {
     return $json;
   }
 
+  /**
+   * Get the current text and configuration settings for an app.
+   *
+   * @param string $module
+   *   The machine name of the extending module.
+   * @param string $language
+   *   The language code.
+   *
+   * @return string
+   *   The text and configuration settings for the app, as JSON.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getAppConfig($module, $language) {
+    // Get the relevant node for the app.
+    $node = $this->getAppNode($module, $language);
+    $app_config = $node->get('field_spalp_app_config')->value();
+    $app_text = $node->get('field_spalp_app_text')->value();
+
+    $config = [
+      'appConfig' => $app_config,
+      'appText' => [
+        $language => $app_text,
+      ]
+    ];
+
+    return json_encode($config);
+  }
+
+  /**
+   * Get the relevant node for a single page app.
+   *
+   * @param string $module
+   *   The machine name of the extending module.
+   * @param string $language
+   *   The language code.
+   *
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getAppNode($module, $language) {
+    // TODO: dependency injection.
+    // TODO: prevent more than one node per language being created for each app.
+    // TODO: filter by language.
+
+    $query = \Drupal::entityQuery('node')
+      ->condition('type', 'applanding')
+      ->condition('field_spalp_app_id', $module);
+
+    $nids = $query->execute();
+
+    $nid = end($nids);
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $node = $node_storage->load($nid);
+
+    return $node;
+  }
+
 }
