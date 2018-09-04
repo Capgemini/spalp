@@ -36,7 +36,7 @@ function spalp_theme() {
     'node__applanding' => [
       'template' => 'node--applanding',
       'base hook' => 'node',
-    ]
+    ],
   ];
 }
 
@@ -101,7 +101,6 @@ function spalp_modules_installed($modules) {
 function spalp_create_nodes($module) {
   // TODO: get config from YAML.
   // TODO: translate the node.
-
   $title = \Drupal::moduleHandler()->getName($module);
 
   $node = Node::create(['type' => 'applanding']);

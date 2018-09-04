@@ -3,4 +3,4 @@ type: module
 description: 'Example module for Single Page App Landing Page'
 core: 8.x
 dependencies:
-  - spalp
+  - drupal:spalp

@@ -10,7 +10,6 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @package Drupal\spalp\Service
  */
-
 class SpalpConfig {
 
   /**
@@ -24,12 +23,15 @@ class SpalpConfig {
    * SpalpConfig constructor.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   Injected event dispatcher dependency.
    */
   public function __construct(EventDispatcherInterface $event_dispatcher) {
     $this->eventDispatcher = $event_dispatcher;
   }
 
   /**
+   * Method to get app ids list.
+   *
    * @return array
    *   List of app ids.
    */

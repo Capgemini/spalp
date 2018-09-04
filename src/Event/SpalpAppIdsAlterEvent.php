@@ -21,10 +21,10 @@ class SpalpAppIdsAlterEvent extends Event {
   /**
    * SpalpAppIdsAlterEvent constructor.
    *
-   * @param $ids
+   * @param array $ids
    *   App ids.
    */
-  public function __construct($ids) {
+  public function __construct(array $ids) {
     $this->ids = $ids;
   }
 
@@ -42,7 +42,7 @@ class SpalpAppIdsAlterEvent extends Event {
    * Adds app id.
    *
    * @param string $id
-   *   App ids.
+   *   App id.
    */
   public function registerId($id) {
     $this->ids[] = $id;
@@ -52,8 +52,9 @@ class SpalpAppIdsAlterEvent extends Event {
    * Sets app ids.
    *
    * @param array $ids
+   *   List of app ids.
    */
-  public function setIds($ids) {
+  public function setIds(array $ids) {
     $this->ids = $ids;
   }
 

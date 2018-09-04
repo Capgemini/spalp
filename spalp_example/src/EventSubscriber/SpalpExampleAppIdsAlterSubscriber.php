@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp_example\EventSubscriber;
 
+use Drupal\spalp_example\SpalpExampleInterface;
 use Drupal\spalp\Event\SpalpAppIdsAlterEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +28,7 @@ class SpalpExampleAppIdsAlterSubscriber implements EventSubscriberInterface {
    *   Spalp App Ids Alter Event.
    */
   public function doAppIdsListAlter(SpalpAppIdsAlterEvent $event) {
-    $event->registerId(SPALP_EXAMPLE_APP_ID);
+    $event->registerId(SpalpExampleInterface::APP_ID);
   }
 
 }
