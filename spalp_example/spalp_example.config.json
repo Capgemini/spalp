@@ -1,14 +1,15 @@
 {
-  "config": {
-    "apiKey": 12345,
-    "endpoint": "https://www.example.com/example"
+  "appConfig": {
+    "bodyRepeat": 2
   },
-  "app_text": {
-    "en-gb": {
-      "firstField": "blah"
+  "appText": {
+    "en": {
+      "heading": "This is the heading",
+      "body": "<p>This is the body</p><p>It contains multiple paragraphs, and is repeated bodyRepeat times</p>"
     },
     "fr": {
-      "firstField": "blahblah"
+      "heading": "C'est le titre",
+      "body": "<p>C'est le corps</p><p>Il contient plusieurs paragraphes</p>"
     }
   }
 }
