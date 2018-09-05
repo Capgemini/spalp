@@ -10,7 +10,6 @@ use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\node\Entity\Node;
 
 /**
  * Implements hook_help().
@@ -36,7 +35,7 @@ function spalp_theme() {
     'node__applanding' => [
       'template' => 'node--applanding',
       'base hook' => 'node',
-    ]
+    ],
   ];
 }
 
@@ -72,53 +71,25 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
  * @see options_allowed_values()
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
-
-  $ids = [];
-
-  \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
-  return array_combine($ids, $ids);
+  return \Drupal::service('spalp.spalpconfig')->getAppIds();
 }
 
 /**
  * Implements hook_modules_installed().
  */
 function spalp_modules_installed($modules) {
+  // TODO: Requires cleanup.
+  // I am not sure this is a good thing!
+  // Maybe explore other ways or evaluate if this is
+  // really really really needed?
   $module_list = system_rebuild_module_data();
 
   foreach ($modules as $module) {
     // Does the module have a dependency on spalp?
     $dependencies = array_keys($module_list[$module]->requires);
     if (in_array('spalp', $dependencies)) {
-      spalp_create_nodes($module);
+      // Invoke the Spalp Core service to create Nodes.
+      \Drupal::service('spalp.core')->createNodes($module);
     }
   }
-}
-
-/**
- * Create applanding nodes in each language when a module is enabled.
- *
- * @param string $module
- *   The machine name of the module being installed.
- *
- * @throws \Drupal\Core\Entity\EntityStorageException
- */
-function spalp_create_nodes($module) {
-  // TODO: get config from YAML.
-  // TODO: translate the node.
-
-  $title = \Drupal::moduleHandler()->getName($module);
-
-  $node = Node::create(['type' => 'applanding']);
-  $node->set('title', $title);
-  $node->set('field_spalp_app_id', $module);
-  // The node should initially be unpublished.
-  $node->status = 0;
-  $node->enforceIsNew();
-  $node->save();
-
-  \Drupal::logger('spalp')->notice(t('Node @nid has been created for @title (@module)', [
-    '@title' => $title,
-    '@module' => $module,
-    '@nid' => $node->id(),
-  ]));
 }
