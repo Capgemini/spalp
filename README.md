@@ -18,7 +18,7 @@ TODO: define app element ID to be replaced by JS
 ## Extending the module
 See the spalp_example module for a simple implementation.
 
-Create a module that implements `hook_spalp_app_ids`.
+Create a module that implements EventSubscriber to react on "SpalpAppIdsAlterEvent::APP_IDS_ALTER" event. EventSubscriber will provide module's app id to list of available app ids.
 
 Default configuration and application text should be stored in mymodule.config.json
 

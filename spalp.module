@@ -36,7 +36,7 @@ function spalp_theme() {
     'node__applanding' => [
       'template' => 'node--applanding',
       'base hook' => 'node',
-    ]
+    ],
   ];
 }
 
@@ -72,11 +72,7 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
  * @see options_allowed_values()
  */
 function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterface $entity = NULL, $cacheable) {
-
-  $ids = [];
-
-  \Drupal::moduleHandler()->alter('spalp_app_ids', $ids);
-  return array_combine($ids, $ids);
+  return \Drupal::service('spalp.spalpconfig')->getAppIds();
 }
 
 /**
@@ -105,7 +101,6 @@ function spalp_modules_installed($modules) {
 function spalp_create_nodes($module) {
   // TODO: get config from YAML.
   // TODO: translate the node.
-
   $title = \Drupal::moduleHandler()->getName($module);
 
   $node = Node::create(['type' => 'applanding']);
