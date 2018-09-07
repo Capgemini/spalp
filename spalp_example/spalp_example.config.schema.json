@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "config": {
+      "type": "object",
+      "properties": {
+        "apiKey": {
+          "type": "integer"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "nestedConfig": {
+          "type": "object",
+          "properties": {
+            "firstParam": {
+              "type": "string"
+            },
+            "secorndParam": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "firstParam",
+            "secorndParam"
+          ]
+        }
+      },
+      "required": [
+        "apiKey",
+        "endpoint",
+        "nestedConfig"
+      ]
+    },
+    "app_text": {
+      "type": "object",
+      "properties": {
+        "firstField": {
+          "type": "string"
+        },
+        "secondField": {
+          "type": "string"
+        },
+        "nestedField": {
+          "type": "object",
+          "properties": {
+            "nestedFirstField": {
+              "type": "string"
+            },
+            "nestedSecondField": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "nestedFirstField",
+            "nestedSecondField"
+          ]
+        }
+      },
+      "required": [
+        "firstField",
+        "secondField",
+        "nestedField"
+      ]
+    }
+  },
+  "required": [
+    "config",
+    "app_text"
+  ]
+}

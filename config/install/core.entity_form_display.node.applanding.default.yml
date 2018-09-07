@@ -6,6 +6,7 @@ dependencies:
     - field.field.node.applanding.field_spalp_app_id
     - field.field.node.applanding.field_spalp_app_text
     - field.field.node.applanding.field_spalp_config
+    - field.field.node.applanding.field_spalp_config_json
     - field.field.node.applanding.field_supporting_content
     - node.type.applanding
   module:
@@ -52,6 +53,13 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
+  field_spalp_config_json:
+    weight: 51
+    settings:
+      show_json_configuration_textarea: '1'
+    third_party_settings: {  }
+    type: json_config_form_field
+    region: content
   field_supporting_content:
     weight: 8
     settings:

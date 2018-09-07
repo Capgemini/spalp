@@ -47,4 +47,26 @@ class SpalpConfig {
     return $event->getIds();
   }
 
+  /**
+   * Get json schmea config from the module's JSON file.
+   *
+   * @param string $module
+   *   The machine name of the module.
+   *
+   * @return array
+   *   Array representation of the configuration schema settings.
+   *
+   * @todo Merge this method with getConfigFromJson method present on pull request #7
+   */
+  public function getConfigSchemaJson($module) {
+    $json = [];
+    // Get the JSON file for the module.
+    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.config.schema.json";
+    if (file_exists($filename)) {
+      $string = file_get_contents($filename);
+      $json = json_decode($string);
+    }
+    return $json;
+  }
+
 }
