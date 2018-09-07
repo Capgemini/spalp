@@ -14,9 +14,7 @@
         attach: function (context, settings) {
             if (typeof settings.spalpJsonFormBuilder != 'undefined' && settings.spalpJsonFormBuilder != null) {
                 $.each(settings.spalpJsonFormBuilder, function (key, jsonFormElement) {
-                    //console.log("jsonFormElement", jsonFormElement);
                     if (schemaDefined(jsonFormElement)) {
-                        //console.log("jsonFormElement.identifier  ", jsonFormElement.identifier);
                         $("#"+jsonFormElement.identifier, context).once('spalp_json_form_builder').each(function() {
                             const brutsin_forms = brutusin["json-forms"];
                             const container = document.getElementById(jsonFormElement.identifier);
