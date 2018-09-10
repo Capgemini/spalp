@@ -4,8 +4,8 @@ status: true
 dependencies:
   module:
     - node
-id: node.field_spalp_config
-field_name: field_spalp_config
+id: node.field_spalp_app_config
+field_name: field_spalp_app_config
 entity_type: node
 type: string_long
 settings:
