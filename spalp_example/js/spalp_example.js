@@ -7,69 +7,60 @@
 
 (function ($, Drupal) {
 
-    Drupal.spalpExample = {};
+  'use strict';
 
-    /**
-     * Get the language of the current page.
-     *
-     * @return {string}
-     *   The ISO language code of the page.
-     */
-    Drupal.spalpExample.getLanguage = function () {
-        return $('html').attr('lang');
-    };
+  Drupal.spalpExample = {'app_id': 'spalp_example'};
 
-    /**
-     * Get the config
-     */
-    Drupal.spalpExample.getConfig = function () {
-        // TODO: get this from the node if it's available.
-        const configURL = '/modules/contrib/spalp/spalp_example/spalp_example.config.json'
-        let config = {}
+  Drupal.behaviors.spalpExample = {
+    attach: function (context, settings) {
+      $('#'+Drupal.spalpExample.app_id, context).once('spalpExample').each(function () {
+        Drupal.spalpExample.getConfig();
+      });
+    }
+  };
 
-        $.getJSON(
-            configURL, function (data) {
-                config = data;
+  /**
+   * Get the config
+   */
+  Drupal.spalpExample.getConfig = function () {
+    const configURL = $('#appConfig1').attr('href');
+    let config = {};
+    if (typeof configURL != 'undefined' && configURL != null) {
+      $.getJSON(
+          configURL, function (data) {
+            config = data;
+            Drupal.spalpExample.addContent(config);
+          }
+      );
+    }
+    return config;
+  };
 
-                const language = Drupal.spalpExample.getLanguage();
-                Drupal.spalpExample.addContent(config, language);
-            }
-        );
-        return config;
-    };
+  /**
+   * Add content to the page.
+   *
+   * @param {object} config
+   *   The JSON object with the app configuration.
+   */
+  Drupal.spalpExample.addContent = function (config) {
+    Drupal.spalpExample.printAppTexts(Drupal.spalpExample.app_id, config.app_text);
+  };
 
-    /**
-     * Add content to the page.
-     *
-     * @param {object} config
-     *   The JSON object with the app configuration.
-     * @param {string} language
-     *   The ISO language code.
-     */
-    Drupal.spalpExample.addContent = function (config, language) {
-        const $appWrapper = $('#spalp_example');
-
-        /*
-         The appText object is used for text that appears within the app.
-         It is keyed by language code.
-         */
-        const heading = '<h2>' + config.appText[language].heading + '</h2>'
-        const body = config.appText[language].body
-
-        $appWrapper.append(heading);
-
-        /*
-          The appConfig object is used for configuration options, such as
-          API keys or endpoint URLs.
-
-          In this simple example, we use it to control the number of times
-          the body is repeated.
-         */
-        for (let i = 0; i < config.appConfig.bodyRepeat; i++) {
-            $appWrapper.append(body);
-        }
-    };
-
-    Drupal.spalpExample.getConfig();
+  /**
+   * Prints app Text on splap container.
+   *
+   * @param {string} appWrapper
+   *   App wrapper element id.
+   * @param {object} data
+   *   The JSON object with the app text.
+   */
+  Drupal.spalpExample.printAppTexts = function (appWrapper, data) {
+    $.each(data, function (key, value) {
+      if ($.isPlainObject(value))
+        Drupal.spalpExample.printAppTexts(appWrapper, value);
+      else
+        $('#'+appWrapper).append('<li>' + key + ' : ' + value + '</li>');
+    });
+  };
 
 })(jQuery, Drupal)
