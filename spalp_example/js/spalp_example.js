@@ -23,7 +23,7 @@
    * Get the config
    */
   Drupal.spalpExample.getConfig = function () {
-    const configURL = $('#appConfig1').attr('href');
+    const configURL = $('#appConfig').attr('href');
     let config = {};
     if (typeof configURL != 'undefined' && configURL != null) {
       $.getJSON(
