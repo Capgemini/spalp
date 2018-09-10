@@ -2,10 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_spalp_config
+    - field.storage.node.field_spalp_app_config
     - node.type.applanding
-id: node.applanding.field_spalp_config
-field_name: field_spalp_config
+id: node.applanding.field_spalp_app_config
+field_name: field_spalp_app_config
 entity_type: node
 bundle: applanding
 label: 'Configuration Options'
