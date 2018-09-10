@@ -1,0 +1,8 @@
+spalp_example.get:
+  path: 'spalp-example/spalp-example.json'
+  defaults:
+    _controller: '\Drupal\spalp_example\Controller\ConfigurationJsonController::getExampleConfig'
+    _title: 'Hello World'
+  method: 'GET'
+  requirements:
+    _permission: 'access content'

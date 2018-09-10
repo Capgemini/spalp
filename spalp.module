@@ -52,6 +52,24 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
     // TODO: Check if the app's module defines a library?
     // Add the extending module's library to the render array.
     $build['#attached']['library'][] = "$app_id/$app_id";
+
+    // Generate relative url with additional slash removed for default language.
+    $base_url_part = rtrim(\Drupal::urlGenerator()->generateFromRoute('<front>', []), '/');
+    // Replace underscores with hyphens to match with better paths.
+    $app_id_url = str_replace('_', '-', $app_id);
+    // Add JSON configuration endpoint in the page.
+    $route_to_config_json = sprintf('%s/%s/%s.json', $base_url_part, $app_id_url, $app_id_url);
+    // Attach link in head.
+    $config_json = [
+      '#tag' => 'link',
+      '#attributes' => [
+        'type' => 'application/json',
+        'id' => 'appConfig',
+        'rel' => 'alternate',
+        'href' => $route_to_config_json,
+      ],
+    ];
+    $build['#attached']['html_head'][] = [$config_json];
   }
 }
 
