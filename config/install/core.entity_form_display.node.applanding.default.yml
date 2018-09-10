@@ -5,7 +5,7 @@ dependencies:
     - field.field.node.applanding.body
     - field.field.node.applanding.field_spalp_app_id
     - field.field.node.applanding.field_spalp_app_text
-    - field.field.node.applanding.field_spalp_config
+    - field.field.node.applanding.field_spalp_app_config
     - field.field.node.applanding.field_spalp_config_json
     - field.field.node.applanding.field_supporting_content
     - node.type.applanding
@@ -45,7 +45,7 @@ content:
       rows: 5
       placeholder: ''
     third_party_settings: {  }
-  field_spalp_config:
+  field_spalp_app_config:
     type: string_textarea
     weight: 11
     region: content
