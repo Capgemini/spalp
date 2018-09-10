@@ -104,22 +104,24 @@ class Core {
    * @param string $language
    *   The language code.
    *
-   * @return string
-   *   The text and configuration settings for the app, as JSON.
+   * @return array
+   *   The text and configuration settings for the app json endpoint, as array.
    */
   public function getAppConfig($module, $language) {
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
 
-    $config = !empty($node->get('field_spalp_config_json')
-      ->getValue()) ? $node->get('field_spalp_config_json')->getValue() : NULL;
+    $config_json = !empty($node->field_spalp_config_json->value) ? $node->field_spalp_config_json->value : NULL;
+
+    $config = json_decode($config_json, TRUE);
 
     // Instantiate the event and dispatch for changes.
     $event = new SpalpConfigAlterEvent($config);
     // Set app id for this event.
     $event->setAppId($module);
     $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
-    return json_encode($event->getConfig());
+    // Return config array.
+    return $event->getConfig();
   }
 
   /**

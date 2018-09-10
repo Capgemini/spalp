@@ -31,7 +31,11 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
   public function doAppConfigAlter(SpalpConfigAlterEvent $event) {
     if ($event->getAppId() === SpalpExampleInterface::APP_ID) {
       $config = $event->getConfig();
-      $additional_config = ['This is for the testing purpose'];
+      $additional_config = [
+        'links' => [
+          'self' => 'http://example.com',
+        ],
+      ];
       $merged_value = array_merge($config, $additional_config);
       $event->setConfig($merged_value);
     }
