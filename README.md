@@ -13,6 +13,11 @@ All relevant configuration and text used in the app is stored on this node,
 and made available as a JSON endpoint to be consumed by the app.
 
 ## JSON endpoints
+When viewing an applanding node, a link to the JSON endpoint will appear in the page head, with the id `appConfig`:
+
+    <link type="application/json" id="appConfig" rel="alternate" href="/spalp/spalp_example/json">
+
+
 TODO: info on URLs, translations, revisioning
 
 ## Extending the module
