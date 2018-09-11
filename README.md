@@ -38,3 +38,10 @@ with the module name selected as the `field_spalp_app_id` value.
 Define a library for your assets as per https://www.drupal.org/node/2274843.
 If the library name matches your module's machine name, the spalp module
 will take care of attaching the library when the app landing node is viewed.
+
+# Issues
+
+Due to the content translation configuration to the content type(App landing page) created by spalp module, there will be a fatal error while we create App landing page content.
+Please refer this link https://www.drupal.org/project/drupal/issues/2599228 .
+
+Please apply the patch https://www.drupal.org/files/issues/2018-05-17/2599228-51.patch mentioned in https://www.drupal.org/project/drupal/issues/2599228 to get it working.

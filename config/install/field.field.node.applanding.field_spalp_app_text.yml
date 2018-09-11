@@ -11,7 +11,7 @@ bundle: applanding
 label: 'App Text'
 description: 'Text that appears within the app.'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }
