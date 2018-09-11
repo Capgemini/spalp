@@ -13,7 +13,7 @@
 
   Drupal.behaviors.spalpExample = {
     attach: function (context, settings) {
-      $('#'+Drupal.spalpExample.app_id, context).once('spalpExample').each(function () {
+      $('#' + Drupal.spalpExample.app_id, context).once('spalpExample').each(function () {
         Drupal.spalpExample.getConfig();
       });
     }
@@ -43,11 +43,11 @@
    *   The JSON object with the app configuration.
    */
   Drupal.spalpExample.addContent = function (config) {
-    Drupal.spalpExample.printAppTexts(Drupal.spalpExample.app_id, config.app_text);
+    Drupal.spalpExample.printAppTexts(Drupal.spalpExample.app_id, config);
   };
 
   /**
-   * Prints app Text on splap container.
+   * Prints app Text on spalp container.
    *
    * @param {string} appWrapper
    *   App wrapper element id.
@@ -56,11 +56,14 @@
    */
   Drupal.spalpExample.printAppTexts = function (appWrapper, data) {
     $.each(data, function (key, value) {
-      if ($.isPlainObject(value))
+      if ($.isPlainObject(value)) {
         Drupal.spalpExample.printAppTexts(appWrapper, value);
-      else
-        $('#'+appWrapper).append('<li>' + key + ' : ' + value + '</li>');
+      }
+      else {
+        $('#' + appWrapper).append('<li>' + key + ' : ' + value + '</li>');
+      }
     });
   };
 
-})(jQuery, Drupal)
+})(jQuery, Drupal);
+
