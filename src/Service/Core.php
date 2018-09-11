@@ -39,8 +39,7 @@ class Core {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Module Handler Interface.
    */
-  public function __construct(LoggerChannelFactoryInterface $loggerFactory,
-    ModuleHandlerInterface $moduleHandler) {
+  public function __construct(LoggerChannelFactoryInterface $loggerFactory, ModuleHandlerInterface $moduleHandler) {
 
     // Logger Factory.
     $this->loggerFactory = $loggerFactory;

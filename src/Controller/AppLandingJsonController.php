@@ -3,6 +3,7 @@
 namespace Drupal\spalp\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -21,20 +22,27 @@ class AppLandingJsonController extends ControllerBase {
   protected $spalpCoreService;
 
   /**
+   * @var \Drupal\Core\Language\LanguageManagerInterface
+   */
+  protected $languageManager;
+
+  /**
    * ConfigurationJsonController constructor.
    *
    * @param \Drupal\spalp\Service\Core $spalp_core_service
    *   Spalp core service to get app configurations and texts.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
    */
-  public function __construct(Core $spalp_core_service) {
+  public function __construct(Core $spalp_core_service, LanguageManagerInterface $language_manager) {
     $this->spalpCoreService = $spalp_core_service;
+    $this->languageManager = $language_manager;
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('spalp.core'));
+    return new static($container->get('spalp.core'), $container->get('language_manager'));
   }
 
   /**
@@ -53,7 +61,7 @@ class AppLandingJsonController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    $language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $language = $this->languageManager->getCurrentLanguage()->getId();
 
     $response = $this->spalpCoreService->getAppConfig($app_id, $language);
 
