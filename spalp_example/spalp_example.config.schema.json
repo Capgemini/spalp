@@ -17,13 +17,13 @@
             "firstParam": {
               "type": "string"
             },
-            "secorndParam": {
+            "secondParam": {
               "type": "boolean"
             }
           },
           "required": [
             "firstParam",
-            "secorndParam"
+            "secondParam"
           ]
         }
       },

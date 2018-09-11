@@ -100,16 +100,19 @@ class Core {
    *
    * @param string $module
    *   The machine name of the module.
+   * @param string $type
+   *   Type to be used for schema json calls.
    *
    * @return array
    *   Array representation of the configuration settings.
    */
-  public function getConfigFromJson($module) {
+  public function getConfigFromJson($module, $type = NULL) {
     $json = [];
 
-    // Get the JSON file for the module.
-    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.config.json";
+    $type = $type !== NULL ? '.' . $type : '';
 
+    // Get the JSON file for the module.
+    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/{$module}.config{$type}.json";
     if (file_exists($filename)) {
       $string = file_get_contents($filename);
       $json = json_decode($string);

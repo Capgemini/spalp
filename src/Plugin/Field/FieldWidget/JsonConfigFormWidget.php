@@ -8,7 +8,7 @@ use Drupal\Core\Field\WidgetBase;
 use Drupal\Component\Utility\Html;
 use Drupal\Component\Utility\Unicode;
 use Drupal\Component\Serialization\Json;
-use Drupal\spalp\Service\SpalpConfig;
+use Drupal\spalp\Service\Core;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -27,18 +27,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Spalp Configuration Service.
+   * Spalp Core Service.
    *
-   * @var \Drupal\spalp\Service\SpalpConfig
+   * @var \Drupal\spalp\Service\Core
    */
-  protected $spalpConfigService;
+  protected $spalpCoreService;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, SpalpConfig $splap_config) {
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, Core $splap_core_service) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
-    $this->spalpConfigService = $splap_config;
+    $this->spalpCoreService = $splap_core_service;
   }
 
   /**
@@ -51,7 +51,7 @@ class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginI
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('spalp.spalpconfig')
+      $container->get('spalp.core')
     );
   }
 
@@ -65,7 +65,7 @@ class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginI
     $selector = '[data-drupal-selector="' . Html::getId('edit-' . $field_name . '-' . $delta . '-value') . '"]';
     $app_id = $form['field_spalp_app_id']['widget']['#default_value'][0];
     if (!empty($app_id)) {
-      $json_schema = $this->spalpConfigService->getConfigSchemaJson($app_id);
+      $json_schema = $this->spalpCoreService->getConfigFromJson($app_id, 'schema');
     }
     $element['value'] = $element + [
       '#type' => 'textarea',
