@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
@@ -33,6 +34,13 @@ class Core {
   protected $moduleHandler;
 
   /**
+   * The Entity Type Manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Event Dispatcher.
    *
    * @var \Drupal\Core\Extension\EventDispatcherInterface
@@ -48,19 +56,20 @@ class Core {
    *   Module Handler Interface.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event Dispatcher interface.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   EntityTypeManagerInterface.
    */
-  public function __construct(LoggerChannelFactoryInterface $loggerFactory,
-                              ModuleHandlerInterface $moduleHandler,
-                              EventDispatcherInterface $event_dispatcher) {
+  public function __construct(
+    LoggerChannelFactoryInterface $loggerFactory,
+    ModuleHandlerInterface $moduleHandler,
+    EventDispatcherInterface $event_dispatcher,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
 
-    // Logger Factory.
     $this->loggerFactory = $loggerFactory;
-
-    // Module Handler.
     $this->moduleHandler = $moduleHandler;
-
-    // Event Dispatcher.
     $this->eventDispatcher = $event_dispatcher;
+    $this->entityTypeManager = $entity_type_manager;
 
   }
 
@@ -70,6 +79,8 @@ class Core {
    * @param string $module
    *   The machine name of the module being installed.
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createNodes($module) {
@@ -77,7 +88,8 @@ class Core {
     // TODO: translate the node.
     $title = $this->moduleHandler->getName($module);
 
-    $node = Node::create(['type' => 'applanding']);
+    $node = $this->entityTypeManager->getStorage('node')->create(['type' => 'applanding']);
+
     $node->set('title', $title);
     $node->set('field_spalp_app_id', $module);
     // The node should initially be unpublished.
@@ -131,6 +143,8 @@ class Core {
    *   The machine name of the extending module.
    * @param string $language
    *   The language code.
+   *
+   * @return array
    */
   public function getAppNode($module, $language) {
     $node_details = [];
