@@ -6,8 +6,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Unicode;
-use Drupal\Component\Serialization\Json;
 use Drupal\spalp\Service\Core;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -75,7 +73,6 @@ class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginI
       '#placeholder' => $this->getSetting('placeholder'),
       '#attributes' => ['class' => ['js-text-full', 'text-full']],
     ];
-    $element['#element_validate'][] = [static::class, 'validateJsonConfiguration'];
 
     $element[$delta] = [
       '#attached' => [
@@ -95,20 +92,6 @@ class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginI
       ],
     ];
     return $element;
-  }
-
-  /**
-   * Validates the input to see if it is a properly formatted JSON object.
-   *
-   * @inheritdoc
-   */
-  public static function validateJsonConfiguration(&$element, FormStateInterface $form_state, $form) {
-    if (Unicode::strlen($element['value']['#value'])) {
-      Json::decode($element['value']['#value']);
-      if (json_last_error() !== JSON_ERROR_NONE) {
-        $form_state->setError($element['value'], t('!name must contain a valid data.', ['!name' => $element['#title']]));
-      }
-    }
   }
 
 }

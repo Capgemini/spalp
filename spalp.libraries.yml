@@ -3,6 +3,7 @@ json-form:
   version: VERSION
   license:
     name: Apache-2.0
+    remote: https://github.com/brutusin/json-forms/blob/master/LICENSE
     gpl-compatible: false
   js:
     /libraries/json-forms/dist/js/brutusin-json-forms.min.js: { minified: true }

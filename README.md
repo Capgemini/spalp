@@ -36,8 +36,7 @@ See spalp_example.config.json for an example of the structure.
 When your module is installed, an unpublished `applanding` node will be created,
 with the module name selected as the `field_spalp_app_id` value.
 
-`appConfig` values will be stored on the node's `field_spalp_app_config` field.
-`appText` will be stored on the node's `field_spalp_app_text` field.
+`appConfig` and `appText` values will be stored on the node's `field_spalp_config_json` field.
 
 ### Adding your app's assets
 Define a library for your assets as per https://www.drupal.org/node/2274843.

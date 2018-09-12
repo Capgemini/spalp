@@ -16,17 +16,18 @@
         $.each(settings.spalpJsonFormBuilder, function (key, jsonFormElement) {
           if (schemaDefined(jsonFormElement)) {
             $("#" + jsonFormElement.identifier, context).once('spalp_json_form_builder').each(function () {
-              const brutsin_forms = brutusin["json-forms"];
+              const brutusin_forms = brutusin["json-forms"];
               const container = document.getElementById(jsonFormElement.identifier);
-              const bf = brutsin_forms.create(jsonFormElement.schema);
+              const brutusin_form_instance = brutusin_forms.create(jsonFormElement.schema);
               const data = $(jsonFormElement.textarea).val() || '{}';
-              bf.render(container, JSON.parse(data));
+              brutusin_form_instance.render(container, JSON.parse(data));
+              $(jsonFormElement.textarea).hide();
               const event_data = {
-                "brutsin_form": bf,
+                "brutusin_form": brutusin_form_instance,
                 "json_config_field": jsonFormElement.textarea
               };
               $("#" + jsonFormElement.identifier + " input").on('change', event_data, function (event) {
-                $(event.data.json_config_field).val(JSON.stringify(event.data.brutsin_form.getData()));
+                $(event.data.json_config_field).val(JSON.stringify(event.data.brutusin_form.getData()));
               });
             });
           }

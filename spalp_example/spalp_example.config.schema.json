@@ -2,71 +2,35 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "config": {
+    "appConfig": {
       "type": "object",
       "properties": {
-        "apiKey": {
+        "bodyRepeat": {
           "type": "integer"
-        },
-        "endpoint": {
-          "type": "string"
-        },
-        "nestedConfig": {
-          "type": "object",
-          "properties": {
-            "firstParam": {
-              "type": "string"
-            },
-            "secondParam": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "firstParam",
-            "secondParam"
-          ]
         }
       },
       "required": [
-        "apiKey",
-        "endpoint",
-        "nestedConfig"
+        "bodyRepeat"
       ]
     },
-    "app_text": {
+    "appText": {
       "type": "object",
       "properties": {
-        "firstField": {
+        "heading": {
           "type": "string"
         },
-        "secondField": {
+        "body": {
           "type": "string"
-        },
-        "nestedField": {
-          "type": "object",
-          "properties": {
-            "nestedFirstField": {
-              "type": "string"
-            },
-            "nestedSecondField": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "nestedFirstField",
-            "nestedSecondField"
-          ]
         }
       },
       "required": [
-        "firstField",
-        "secondField",
-        "nestedField"
+        "heading",
+        "body"
       ]
     }
   },
   "required": [
-    "config",
-    "app_text"
+    "appConfig",
+    "appText"
   ]
 }
