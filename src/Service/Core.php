@@ -2,9 +2,11 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 
 /**
@@ -38,8 +40,7 @@ class Core {
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Module Handler Interface.
    */
-  public function __construct(LoggerChannelFactoryInterface $loggerFactory,
-                              ModuleHandlerInterface $moduleHandler) {
+  public function __construct(LoggerChannelFactoryInterface $loggerFactory, ModuleHandlerInterface $moduleHandler) {
 
     // Logger Factory.
     $this->loggerFactory = $loggerFactory;
@@ -68,13 +69,11 @@ class Core {
     $json = $this->getConfigFromJson($module);
 
     // TODO: translate the node.
-    $language = 'en';
     if (!empty($json)) {
-      $app_text = $json->appText;
-      $app_text_string = json_encode($app_text->{$language});
+      $app_text_string = Json::encode($json['appText']);
       $node->set('field_spalp_app_text', $app_text_string);
 
-      $app_config_string = json_encode($json->appConfig);
+      $app_config_string = Json::encode($json['appConfig']);
       $node->set('field_spalp_app_config', $app_config_string);
     }
 
@@ -112,7 +111,7 @@ class Core {
 
     if (file_exists($filename)) {
       $string = file_get_contents($filename);
-      $json = json_decode($string);
+      $json = Json::decode($string);
     }
 
     return $json;
@@ -139,11 +138,16 @@ class Core {
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
     if (!empty($node)) {
+
+      // TODO: check permission to view the node.
+
+      // TODO: get a specific revision.
+
       $app_config = $node->field_spalp_app_config->value;
       $app_text = $node->field_spalp_app_text->value;
 
-      $config->appConfig = json_decode($app_config);
-      $config->appText = json_decode($app_text);
+      $config->appConfig = Json::decode($app_config);
+      $config->appText = Json::decode($app_text);
     }
 
     return $config;
@@ -180,4 +184,28 @@ class Core {
     return $node;
   }
 
+  /**
+   * Prepare a link to the page head with the app's JSON endpoint URL.
+   *
+   * @param string $app_id
+   *   The machine name of the extending module.
+   *
+   * @return array
+   *   Render array for the link.
+   */
+  public function getJsonLink($app_id) {
+    // TODO: change the link if we're on a revision ID.
+    $config_url = Url::fromRoute('entity.node.appjson', ['app_id' => $app_id])->toString();
+    $config_json = [
+      [
+        'type' => 'application/json',
+        'id' => 'appConfig',
+        'rel' => 'alternate',
+        'href' => $config_url,
+      ],
+      TRUE,
+    ];
+
+    return $config_json;
+  }
 }
