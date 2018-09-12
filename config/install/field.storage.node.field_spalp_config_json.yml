@@ -1,11 +1,10 @@
-uuid: 6c28bc09-65a2-4f54-99dd-338a755becdb
 langcode: en
 status: true
 dependencies:
   module:
     - node
-id: node.field_spalp_app_text
-field_name: field_spalp_app_text
+id: node.field_spalp_config_json
+field_name: field_spalp_config_json
 entity_type: node
 type: string_long
 settings:

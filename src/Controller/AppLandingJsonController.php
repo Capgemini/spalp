@@ -22,6 +22,8 @@ class AppLandingJsonController extends ControllerBase {
   protected $spalpCoreService;
 
   /**
+   * Language Manager instance.
+   *
    * @var \Drupal\Core\Language\LanguageManagerInterface
    */
   protected $languageManager;
@@ -32,6 +34,7 @@ class AppLandingJsonController extends ControllerBase {
    * @param \Drupal\spalp\Service\Core $spalp_core_service
    *   Spalp core service to get app configurations and texts.
    * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   Language manager instance.
    */
   public function __construct(Core $spalp_core_service, LanguageManagerInterface $language_manager) {
     $this->spalpCoreService = $spalp_core_service;
@@ -53,6 +56,7 @@ class AppLandingJsonController extends ControllerBase {
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON output.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -67,5 +71,5 @@ class AppLandingJsonController extends ControllerBase {
 
     return new JsonResponse($response);
   }
-}
 
+}

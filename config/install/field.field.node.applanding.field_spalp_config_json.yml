@@ -2,16 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_spalp_app_text
+    - field.storage.node.field_spalp_config_json
     - node.type.applanding
-id: node.applanding.field_spalp_app_text
-field_name: field_spalp_app_text
+id: node.applanding.field_spalp_config_json
+field_name: field_spalp_config_json
 entity_type: node
 bundle: applanding
-label: 'App Text'
-description: 'Text that appears within the app.'
+label: 'App Configuration JSON'
+description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

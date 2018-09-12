@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "appConfig": {
+      "type": "object",
+      "properties": {
+        "bodyRepeat": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "bodyRepeat"
+      ]
+    },
+    "appText": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "heading",
+        "body"
+      ]
+    }
+  },
+  "required": [
+    "appConfig",
+    "appText"
+  ]
+}

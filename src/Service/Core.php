@@ -70,11 +70,8 @@ class Core {
 
     // TODO: translate the node.
     if (!empty($json)) {
-      $app_text_string = Json::encode($json['appText']);
-      $node->set('field_spalp_app_text', $app_text_string);
-
-      $app_config_string = Json::encode($json['appConfig']);
-      $node->set('field_spalp_app_config', $app_config_string);
+      $config_json = Json::encode($json);
+      $node->set('field_spalp_config_json', $config_json);
     }
 
     // The node should initially be unpublished.
@@ -99,16 +96,19 @@ class Core {
    *
    * @param string $module
    *   The machine name of the module.
+   * @param string $type
+   *   Type to be used for schema json calls.
    *
    * @return array
    *   Array representation of the configuration settings.
    */
-  public function getConfigFromJson($module) {
+  public function getConfigFromJson($module, $type = NULL) {
     $json = [];
 
-    // Get the JSON file for the module.
-    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/$module.config.json";
+    $type = $type !== NULL ? '.' . $type : '';
 
+    // Get the JSON file for the module.
+    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/{$module}.config{$type}.json";
     if (file_exists($filename)) {
       $string = file_get_contents($filename);
       $json = Json::decode($string);
@@ -132,7 +132,6 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAppConfig($module, $language) {
-
     $config = new \StdClass();
 
     // Get the relevant node for the app.
@@ -140,17 +139,11 @@ class Core {
     if (!empty($node)) {
 
       // TODO: check permission to view the node.
-
       // TODO: get a specific revision.
-
-      $app_config = $node->field_spalp_app_config->value;
-      $app_text = $node->field_spalp_app_text->value;
-
-      $config->appConfig = Json::decode($app_config);
-      $config->appText = Json::decode($app_text);
+      $config = $node->field_spalp_config_json->value;
     }
 
-    return $config;
+    return Json::decode($config);
   }
 
   /**
@@ -170,7 +163,6 @@ class Core {
   public function getAppNode($module, $language) {
     // TODO: dependency injection.
     // TODO: prevent more than one node per language being created for each app.
-    // TODO: filter by language.
     $query = \Drupal::entityQuery('node')
       ->condition('type', 'applanding')
       ->condition('field_spalp_app_id', $module);
@@ -180,8 +172,9 @@ class Core {
     $nid = end($nids);
     $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $node = $node_storage->load($nid);
+    $node_details = $node->getTranslation($language);
 
-    return $node;
+    return $node_details;
   }
 
   /**
@@ -208,4 +201,5 @@ class Core {
 
     return $config_json;
   }
+
 }
