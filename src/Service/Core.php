@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -68,13 +69,11 @@ class Core {
     $json = $this->getConfigFromJson($module);
 
     // TODO: translate the node.
-    $language = 'en';
     if (!empty($json)) {
-      $app_text = $json->appText;
-      $app_text_string = json_encode($app_text->{$language});
+      $app_text_string = Json::encode($json['appText']);
       $node->set('field_spalp_app_text', $app_text_string);
 
-      $app_config_string = json_encode($json->appConfig);
+      $app_config_string = Json::encode($json['appConfig']);
       $node->set('field_spalp_app_config', $app_config_string);
     }
 
@@ -112,7 +111,7 @@ class Core {
 
     if (file_exists($filename)) {
       $string = file_get_contents($filename);
-      $json = json_decode($string);
+      $json = Json::decode($string);
     }
 
     return $json;
@@ -147,8 +146,8 @@ class Core {
       $app_config = $node->field_spalp_app_config->value;
       $app_text = $node->field_spalp_app_text->value;
 
-      $config->appConfig = json_decode($app_config);
-      $config->appText = json_decode($app_text);
+      $config->appConfig = Json::decode($app_config);
+      $config->appText = Json::decode($app_text);
     }
 
     return $config;
