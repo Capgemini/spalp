@@ -2,3 +2,5 @@ name: 'Single Page Application Landing Page'
 type: module
 description: 'This module provides a way for site managers to configure and serve single-page applications as pages in a Drupal site.'
 core: 8.x
+dependencies:
+  - content_translation

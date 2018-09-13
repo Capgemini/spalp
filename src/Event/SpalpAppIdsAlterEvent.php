@@ -45,7 +45,7 @@ class SpalpAppIdsAlterEvent extends Event {
    *   App id.
    */
   public function registerId($id) {
-    $this->ids[] = $id;
+    $this->ids[$id] = $id;
   }
 
   /**

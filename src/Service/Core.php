@@ -4,9 +4,11 @@ namespace Drupal\spalp\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\node\Entity\Node;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -92,6 +94,16 @@ class Core {
 
     $node->set('title', $title);
     $node->set('field_spalp_app_id', $module);
+
+    // Import the configuration and text.
+    $json = $this->getConfigFromJson($module);
+
+    // TODO: translate the node.
+    if (!empty($json)) {
+      $config_json = Json::encode($json);
+      $node->set('field_spalp_config_json', $config_json);
+    }
+
     // The node should initially be unpublished.
     $node->status = 0;
     $node->enforceIsNew();
@@ -109,6 +121,32 @@ class Core {
   }
 
   /**
+   * Get initial config from the module's JSON file.
+   *
+   * @param string $module
+   *   The machine name of the module.
+   * @param string $type
+   *   Type to be used for schema json calls.
+   *
+   * @return array
+   *   Array representation of the configuration settings.
+   */
+  public function getConfigFromJson($module, $type = NULL) {
+    $json = [];
+
+    $type = $type !== NULL ? '.' . $type : '';
+
+    // Get the JSON file for the module.
+    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/{$module}.config{$type}.json";
+    if (file_exists($filename)) {
+      $string = file_get_contents($filename);
+      $json = Json::decode($string);
+    }
+
+    return $json;
+  }
+
+  /**
    * Get the current text and configuration settings for an app.
    *
    * @param string $module
@@ -120,12 +158,18 @@ class Core {
    *   The text and configuration settings for the app json endpoint, as array.
    */
   public function getAppConfig($module, $language) {
+    $config = new \StdClass();
+
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
+    if (!empty($node)) {
 
-    $config_json = !empty($node->field_spalp_config_json->value) ? $node->field_spalp_config_json->value : NULL;
+      // TODO: check permission to view the node.
+      // TODO: get a specific revision.
+      $config = $node->field_spalp_config_json->value;
+    }
 
-    $config = json_decode($config_json, TRUE);
+    $config = Json::decode($config_json);
 
     // Instantiate the event and dispatch for changes.
     $event = new SpalpConfigAlterEvent($config);
@@ -133,6 +177,7 @@ class Core {
     $event->setAppId($module);
     $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
     // Return config array.
+
     return $event->getConfig();
   }
 
@@ -147,16 +192,43 @@ class Core {
    * @return array
    */
   public function getAppNode($module, $language) {
-    $node_details = [];
-    $nids = \Drupal::entityQuery('node')
+    // TODO: dependency injection.
+    // TODO: prevent more than one node per language being created for each app.
+    $query = \Drupal::entityQuery('node')
       ->condition('type', 'applanding')
       ->condition('field_spalp_app_id', $module)
       ->execute();
     $nid = end($nids);
-    $node = Node::load($nid);
-
+    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+    $node = $node_storage->load($nid);
     $node_details = $node->getTranslation($language);
+
     return $node_details;
+  }
+
+  /**
+   * Prepare a link to the page head with the app's JSON endpoint URL.
+   *
+   * @param string $app_id
+   *   The machine name of the extending module.
+   *
+   * @return array
+   *   Render array for the link.
+   */
+  public function getJsonLink($app_id) {
+    // TODO: change the link if we're on a revision ID.
+    $config_url = Url::fromRoute('entity.node.appjson', ['app_id' => $app_id])->toString();
+    $config_json = [
+      [
+        'type' => 'application/json',
+        'id' => 'appConfig',
+        'rel' => 'alternate',
+        'href' => $config_url,
+      ],
+      TRUE,
+    ];
+
+    return $config_json;
   }
 
 }
