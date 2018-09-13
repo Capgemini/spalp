@@ -5,7 +5,7 @@ namespace Drupal\spalp\Event;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Event fired for collecting additional configurations for this app id.
+ * Event fired to allow modules to change app configuration.
  */
 class SpalpConfigAlterEvent extends Event {
 
@@ -19,7 +19,7 @@ class SpalpConfigAlterEvent extends Event {
   protected $config = [];
 
   /**
-   * App id for the sub module.
+   * App id for the extending module.
    *
    * @var string
    */
@@ -28,10 +28,13 @@ class SpalpConfigAlterEvent extends Event {
   /**
    * SpalpConfigAlterEvent constructor.
    *
+   * @param string $app_id
+   *   The machine name of the extending module.
    * @param array $config
    *   App config.
    */
-  public function __construct(array $config) {
+  public function __construct($app_id, array $config) {
+    $this->appId = $app_id;
     $this->config = $config;
   }
 
@@ -49,27 +52,17 @@ class SpalpConfigAlterEvent extends Event {
    * Sets app config.
    *
    * @param array $config
-   *   List of app config.
+   *   List of configuration options.
    */
   public function setConfig(array $config) {
     $this->config = $config;
   }
 
   /**
-   * Set app id for the configuration event.
-   *
-   * @param string $appId
-   *   App id defined for sub-module.
-   */
-  public function setAppId($appId) {
-    $this->appId = $appId;
-  }
-
-  /**
    * Get app id for this event for sub-modules to check.
    *
    * @return string
-   *   app id fot the event
+   *   App id fot the event.
    */
   public function getAppId() {
     return $this->appId;

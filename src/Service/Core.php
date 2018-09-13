@@ -9,7 +9,6 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -166,19 +165,17 @@ class Core {
 
       // TODO: check permission to view the node.
       // TODO: get a specific revision.
-      $config = $node->field_spalp_config_json->value;
+      $config_json = $node->field_spalp_config_json->value;
+      $config = Json::decode($config_json);
+
+      // Dispatch event to allow modules to change config.
+      $event = new SpalpConfigAlterEvent($module, $config);
+      $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
+
+      $config = $event->getConfig();
     }
 
-    $config = Json::decode($config_json);
-
-    // Instantiate the event and dispatch for changes.
-    $event = new SpalpConfigAlterEvent($config);
-    // Set app id for this event.
-    $event->setAppId($module);
-    $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
-    // Return config array.
-
-    return $event->getConfig();
+    return $config;
   }
 
   /**
@@ -189,21 +186,24 @@ class Core {
    * @param string $language
    *   The language code.
    *
-   * @return array
+   * @return \Drupal\Core\Entity\EntityInterface|null
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAppNode($module, $language) {
     // TODO: dependency injection.
-    // TODO: prevent more than one node per language being created for each app.
-    $query = \Drupal::entityQuery('node')
-      ->condition('type', 'applanding')
-      ->condition('field_spalp_app_id', $module)
-      ->execute();
-    $nid = end($nids);
-    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
-    $node = $node_storage->load($nid);
-    $node_details = $node->getTranslation($language);
+    $node_storage = $node = $this->entityTypeManager->getStorage('node');
 
-    return $node_details;
+    $query = $node_storage->getQuery()
+      ->condition('type', 'applanding')
+      ->condition('field_spalp_app_id', $module);
+    $nids = $query->execute();
+
+    // TODO: prevent more than one node per language being created for each app.
+    $nid = end($nids);
+    $node = $node_storage->load($nid);
+
+    return $node;
   }
 
   /**

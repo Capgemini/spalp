@@ -31,14 +31,33 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
   public function doAppConfigAlter(SpalpConfigAlterEvent $event) {
     if ($event->getAppId() === SpalpExampleInterface::APP_ID) {
       $config = $event->getConfig();
-      $additional_config = [
-        'links' => [
-          'self' => 'http://example.com',
-        ],
-      ];
-      $merged_value = array_merge($config, $additional_config);
-      $event->setConfig($merged_value);
+
+      // Simple example - change one setting on test environments.
+      if ($this->isTestEnvironment()) {
+        $config['appConfig']['bodyRepeat'] = 5;
+      }
+
+      $event->setConfig($config);
     }
+  }
+
+  /**
+   * Check if we're on a test environment.
+   *
+   * @return bool
+   *   TRUE if we're on a test environment.
+   */
+  public function isTestEnvironment() {
+    // TODO: proper dependency injection example.
+    $host = \Drupal::request()->getHost();
+
+    $test_environments = [
+      'localhost',
+      'dev.example.com',
+      'test.example.com',
+    ];
+
+    return in_array($host, $test_environments);
   }
 
 }
