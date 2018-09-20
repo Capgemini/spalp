@@ -2,12 +2,14 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\spalp\Event\SpalpConfigAlterEvent;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
-use Drupal\node\Entity\Node;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Spalp Core Service.
@@ -33,20 +35,42 @@ class Core {
   protected $moduleHandler;
 
   /**
+   * The Entity Type Manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Event Dispatcher.
+   *
+   * @var \Drupal\Core\Extension\EventDispatcherInterface
+   */
+  protected $eventDispatcher;
+
+  /**
    * Spalp Core constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
    *   LoggerChannelFactory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Module Handler Interface.
+   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   *   Event Dispatcher interface.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   EntityTypeManagerInterface.
    */
-  public function __construct(LoggerChannelFactoryInterface $loggerFactory, ModuleHandlerInterface $moduleHandler) {
+  public function __construct(
+    LoggerChannelFactoryInterface $loggerFactory,
+    ModuleHandlerInterface $moduleHandler,
+    EventDispatcherInterface $event_dispatcher,
+    EntityTypeManagerInterface $entity_type_manager
+  ) {
 
-    // Logger Factory.
     $this->loggerFactory = $loggerFactory;
-
-    // Module Handler.
     $this->moduleHandler = $moduleHandler;
+    $this->eventDispatcher = $event_dispatcher;
+    $this->entityTypeManager = $entity_type_manager;
 
   }
 
@@ -56,12 +80,17 @@ class Core {
    * @param string $module
    *   The machine name of the module being installed.
    *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createNodes($module) {
+    // TODO: get config from YAML.
+    // TODO: translate the node.
     $title = $this->moduleHandler->getName($module);
 
-    $node = Node::create(['type' => 'applanding']);
+    $node = $this->entityTypeManager->getStorage('node')->create(['type' => 'applanding']);
+
     $node->set('title', $title);
     $node->set('field_spalp_app_id', $module);
 
@@ -76,7 +105,6 @@ class Core {
 
     // The node should initially be unpublished.
     $node->status = 0;
-
     $node->enforceIsNew();
     $node->save();
 
@@ -121,18 +149,21 @@ class Core {
    * Get the current text and configuration settings for an app.
    *
    * @param string $module
-   *   The machine name of the extending module.
+   *   The machine name of the module being installed.
    * @param string $language
    *   The language code.
    *
-   * @return string
-   *   The text and configuration settings for the app, as JSON.
-   *
+   * @return array
+   *   The text and configuration settings for the app json endpoint, as array.
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAppConfig($module, $language) {
-    $config = new \StdClass();
+  public function getAppConfig($module, $language = NULL) {
+    $config = [];
+
+    if ($language == NULL) {
+      $language = $this->languageManager->getCurrentLanguage()->getId();
+    }
 
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
@@ -140,10 +171,17 @@ class Core {
 
       // TODO: check permission to view the node.
       // TODO: get a specific revision.
-      $config = $node->field_spalp_config_json->value;
+      $config_json = $node->field_spalp_config_json->value;
+      $config = Json::decode($config_json);
+
+      // Dispatch event to allow modules to change config.
+      $event = new SpalpConfigAlterEvent($module, $config);
+      $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
+
+      $config = $event->getConfig();
     }
 
-    return Json::decode($config);
+    return $config;
   }
 
   /**
@@ -155,26 +193,39 @@ class Core {
    *   The language code.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
-   *   The relevant applanding node.
-   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAppNode($module, $language) {
-    // TODO: dependency injection.
-    // TODO: prevent more than one node per language being created for each app.
-    $query = \Drupal::entityQuery('node')
+    $node_storage = $node = $this->entityTypeManager->getStorage('node');
+
+    $query = $node_storage->getQuery()
       ->condition('type', 'applanding')
       ->condition('field_spalp_app_id', $module);
-
     $nids = $query->execute();
 
+    // TODO: prevent more than one node per language being created for each app.
     $nid = end($nids);
-    $node_storage = \Drupal::entityTypeManager()->getStorage('node');
     $node = $node_storage->load($nid);
-    $node_details = $node->getTranslation($language);
 
-    return $node_details;
+    try {
+      // Use the translation, if there is one.
+      $node = $node->getTranslation($language);
+    }
+    catch (\InvalidArgumentException $exception) {
+      // If there's no relevant translation, log it.
+      $this->loggerFactory->get('spalp')->notice(
+        $this->t('Attempt to fetch non-existent translation of node @nid to @language for @module module.',
+          [
+            '@nid' => $node->id(),
+            '@language' => $language,
+            '@module' => $module,
+          ]
+        )
+      );
+    }
+
+    return $node;
   }
 
   /**
