@@ -81,10 +81,6 @@ function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterfac
  * Implements hook_modules_installed().
  */
 function spalp_modules_installed($modules) {
-  // TODO: Requires cleanup.
-  // I am not sure this is a good thing!
-  // Maybe explore other ways or evaluate if this is
-  // really really really needed?
   $module_list = system_rebuild_module_data();
 
   foreach ($modules as $module) {
