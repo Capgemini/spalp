@@ -155,9 +155,15 @@ class Core {
    *
    * @return array
    *   The text and configuration settings for the app json endpoint, as array.
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAppConfig($module, $language) {
-    $config = new \StdClass();
+  public function getAppConfig($module, $language = NULL) {
+    $config = [];
+
+    if ($language == NULL) {
+      $language = $this->languageManager->getCurrentLanguage()->getId();
+    }
 
     // Get the relevant node for the app.
     $node = $this->getAppNode($module, $language);
@@ -191,7 +197,6 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
   public function getAppNode($module, $language) {
-    // TODO: dependency injection.
     $node_storage = $node = $this->entityTypeManager->getStorage('node');
 
     $query = $node_storage->getQuery()
@@ -205,8 +210,7 @@ class Core {
 
     try {
       // Use the translation, if there is one.
-      $translation = $node->getTranslation($language);
-      $node = $translation;
+      $node = $node->getTranslation($language);
     }
     catch (\InvalidArgumentException $exception) {
       // If there's no relevant translation, log it.
