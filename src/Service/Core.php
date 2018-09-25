@@ -9,6 +9,7 @@ use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\spalp\Event\SpalpConfigLocationAlterEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -130,13 +131,23 @@ class Core {
    * @return array
    *   Array representation of the configuration settings.
    */
-  public function getConfigFromJson($module, $type = NULL) {
+  public function getConfigFromJson($module, $type = 'config') {
     $json = [];
 
-    $type = $type !== NULL ? '.' . $type : '';
+    // Set up default paths to config files.
+    $module_path = DRUPAL_ROOT . '/' . drupal_get_path('module', $module);
+    $config_locations = [
+      'config' => $module_path . "/{$module}.config.json",
+      'schema' => $module_path . "/{$module}.config.schema.json",
+    ];
 
-    // Get the JSON file for the module.
-    $filename = DRUPAL_ROOT . '/' . drupal_get_path('module', $module) . "/{$module}.config{$type}.json";
+    // Allow modules to change the config path.
+    $event = new SpalpConfigLocationAlterEvent($module, $config_locations);
+    $this->eventDispatcher->dispatch(SpalpConfigLocationAlterEvent::CONFIG_LOCATION_ALTER, $event);
+    $config_locations = $event->getConfigLocations();
+
+    // Get the JSON from the file.
+    $filename = $config_locations[$type];
     if (file_exists($filename)) {
       $string = file_get_contents($filename);
       $json = Json::decode($string);
