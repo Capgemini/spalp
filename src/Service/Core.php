@@ -155,6 +155,7 @@ class Core {
    *
    * @return array
    *   The text and configuration settings for the app json endpoint, as array.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
@@ -193,6 +194,8 @@ class Core {
    *   The language code.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
+   *   The applanding node for this module.
+   *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */

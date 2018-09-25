@@ -2,12 +2,14 @@
  * @file
  * Configuration form builder implementation.
  */
+
 (function ($, Drupal, drupalSettings) {
 
   'use strict';
 
   /**
    * Builds json form based on schema.
+   *
    * @type {{attach: Drupal.behaviors.spalp_json_form_builder.attach}}
    */
   Drupal.behaviors.spalp_json_form_builder = {

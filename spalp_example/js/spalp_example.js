@@ -1,4 +1,5 @@
 /**
+ * @file
  * Example module for the Single Page Application Landing Page module.
  *
  * This example uses jQuery to keep the code simple, but apps can use any
@@ -20,7 +21,7 @@
     };
 
     /**
-     * Get the config
+     * Get the config from JSON.
      */
     Drupal.spalpExample.getConfig = function () {
         const configURL = $('#appConfig').attr('href');
@@ -76,6 +77,5 @@
         $appWrapper.append(body);
       }
     };
-
 
 })(jQuery, Drupal)
