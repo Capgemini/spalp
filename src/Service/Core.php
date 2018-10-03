@@ -90,34 +90,34 @@ class Core {
     // TODO: translate the node.
     $title = $this->moduleHandler->getName($module);
 
-    $node = $this->entityTypeManager->getStorage('node')->create(['type' => 'applanding']);
-
-    $node->set('title', $title);
-    $node->set('field_spalp_app_id', $module);
-
     // Import the configuration and text.
     $json = $this->getConfigFromJson($module);
-
-    // TODO: translate the node.
     if (!empty($json)) {
+      $node = $this->entityTypeManager->getStorage('node')->create(['type' => 'applanding']);
+
+      $node->set('title', $title);
+      $node->set('field_spalp_app_id', $module);
+
       $config_json = Json::encode($json);
       $node->set('field_spalp_config_json', $config_json);
+
+      // The node should initially be unpublished.
+      $node->status = 0;
+      $node->enforceIsNew();
+      $node->save();
+
+      // TODO: translate the node.
+
+      $this->loggerFactory->get('spalp')->notice(
+        $this->t('Node @nid has been created for @title (@module)',
+          [
+            '@title' => $title,
+            '@module' => $module,
+            '@nid' => $node->id(),
+          ]
+        )
+      );
     }
-
-    // The node should initially be unpublished.
-    $node->status = 0;
-    $node->enforceIsNew();
-    $node->save();
-
-    $this->loggerFactory->get('spalp')->notice(
-      $this->t('Node @nid has been created for @title (@module)',
-        [
-          '@title' => $title,
-          '@module' => $module,
-          '@nid' => $node->id(),
-        ]
-      )
-    );
   }
 
   /**
