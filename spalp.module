@@ -44,10 +44,15 @@ function spalp_theme() {
  */
 function spalp_theme_suggestions_node_alter(array &$suggestions, array $variables) {
   // Allow modules to provide a specific template for their app ID.
-  $app_id = $variables['elements']['#node']->get('field_spalp_app_id')->getString();
-  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
-  $suggestions[] = 'node__applanding__' . $app_id;
-  $suggestions[] = 'node__applanding__' . $app_id . '__' . $sanitized_view_mode;
+  $node = $variables['elements']['#node'];
+  if ($node->getType() == 'applanding') {
+    $app_id = $node->get('field_spalp_app_id')
+      ->getString();
+    $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.',
+      '_');
+    $suggestions[] = 'node__applanding__' . $app_id;
+    $suggestions[] = 'node__applanding__' . $app_id . '__' . $sanitized_view_mode;
+  }
 }
 
 /**
