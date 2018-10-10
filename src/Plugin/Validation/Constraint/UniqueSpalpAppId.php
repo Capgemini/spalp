@@ -9,10 +9,10 @@ use Symfony\Component\Validator\Constraint;
  *
  * @Constraint(
  *   id = "unique_spalp_app_id",
- *   label = @Translation("Unique App ID", context = "Validation"),
+ *   label = @Translation("Spalp App ID is unique across the site", context = "Validation"),
  *   type = "string"
  * )
  */
 class UniqueSpalpAppId extends Constraint {
-  public $notUnique = '%value is not unique';
+  public $notUnique = 'The app ID must be unique - another landing page already exists for %value';
 }

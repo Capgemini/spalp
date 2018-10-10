@@ -22,11 +22,11 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
     Constraint $constraint
   ) {
 
-    $node = $items->getParent();
-
+    $node = $items->getParent()->getValue();
+    $this_nid = $node->id();
     foreach ($items as $item) {
-      // Next check if the value is unique.
-      if ($this->appIdExists($item->value, $node->id())) {
+      // Does this app id value exist on another node?.
+      if ($this->appIdExists($item->value, $this_nid)) {
         $this->context->addViolation($constraint->notUnique,
           ['%value' => $item->value]);
       }
@@ -34,7 +34,13 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
   }
 
   /**
-   * @param $value
+   * Check if a different applanding node exists for this app ID.
+   *
+   * @param string $value
+   *   The app id.
+   *
+   * @param int $nid
+   *   The id of the node being created or edited.
    *
    * @return bool
    *   TRUE if the app ID already exists on another node.
@@ -42,8 +48,11 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
   private function appIdExists($value, $nid) {
     $id_exists = FALSE;
 
-    // TODO: Does a different app node already exist with this ID?
-    if (1) {
+    // Does a different app node already exist with this ID?
+    // TODO: do this using dependency injection.
+    $existing_node = \Drupal::service('spalp.core')->getAppNode($value);
+
+    if (!empty($existing_node) && $existing_node->id() != $nid) {
       $id_exists = TRUE;
     }
 
