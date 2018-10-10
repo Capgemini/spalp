@@ -70,10 +70,10 @@ class ExampleBlock extends BlockBase implements ContainerFactoryPluginInterface 
     $config_and_text = $this->spalpCore->getAppConfig('spalp_example', $language);
 
     // Split out the app text for easier access.
-    $app_text = $config_and_text->appText->{$language};
+    $app_text = $config_and_text['appText'];
 
     // App text for the current language is now available as an object.
-    $build['spalp_example_block']['#markup'] = '<h2>' . $app_text->heading . '</h2>' . $app_text->body;
+    $build['spalp_example_block']['#markup'] = '<h2>' . $app_text['heading'] . '</h2>' . $app_text['body'];
 
     return $build;
   }

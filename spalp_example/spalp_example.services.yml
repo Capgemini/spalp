@@ -3,3 +3,11 @@ services:
     class: Drupal\spalp_example\EventSubscriber\SpalpExampleAppIdsAlterSubscriber
     tags:
       - { name: event_subscriber }
+  spalp_example.app_config_alter:
+    class: Drupal\spalp_example\EventSubscriber\SpalpExampleConfigAlterSubscriber
+    tags:
+      - { name: event_subscriber }
+  spalp_example.config_location_alter:
+    class: Drupal\spalp_example\EventSubscriber\SpalpExampleConfigLocationAlterSubscriber
+    tags:
+      - { name: event_subscriber }
