@@ -1,12 +1,13 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
+  "description": "",
   "type": "object",
   "properties": {
     "appConfig": {
       "type": "object",
       "properties": {
         "bodyRepeat": {
-          "type": "integer"
+          "type": "number"
         }
       },
       "required": [
@@ -17,15 +18,41 @@
       "type": "object",
       "properties": {
         "heading": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         },
         "body": {
-          "type": "string"
+          "type": "string",
+          "minLength": 1
+        },
+        "arrayOfObjects": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "title",
+              "other"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "other": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
         }
       },
       "required": [
         "heading",
-        "body"
+        "body",
+        "arrayField",
+        "arrayOfObjects"
       ]
     }
   },

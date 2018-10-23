@@ -4,6 +4,16 @@
   },
   "appText": {
     "heading": "This is the heading",
-    "body": "<p>This is the body</p><p>It contains multiple paragraphs, and is repeated bodyRepeat times</p>"
+    "body": "<p>This is the body</p><p>It contains multiple paragraphs, and is repeated bodyRepeat times</p>",
+    "arrayOfObjects": [
+      {
+        "title": "my title",
+        "other": "my other"
+      },
+      {
+        "title": "my title",
+        "other": "my other"
+      }
+    ]
   }
 }
