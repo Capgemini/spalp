@@ -17,18 +17,24 @@
       if (typeof settings.spalpJsonFormBuilder != 'undefined' && settings.spalpJsonFormBuilder != null) {
         $.each(settings.spalpJsonFormBuilder, function (key, jsonFormElement) {
           if (schemaDefined(jsonFormElement)) {
-            $("#" + jsonFormElement.identifier, context).once('spalp_json_form_builder').each(function () {
+            const jsonFormId = "#" + jsonFormElement.identifier;
+            $(jsonFormId, context).once('spalp_json_form_builder').each(function () {
               const brutusin_forms = brutusin["json-forms"];
               const container = document.getElementById(jsonFormElement.identifier);
               const brutusin_form_instance = brutusin_forms.create(jsonFormElement.schema);
               const data = $(jsonFormElement.textarea).val() || '{}';
+
+              // Replace the default text field with a generated form.
               brutusin_form_instance.render(container, JSON.parse(data));
               $(jsonFormElement.textarea).hide();
+
               const event_data = {
                 "brutusin_form": brutusin_form_instance,
                 "json_config_field": jsonFormElement.textarea
               };
-              $("#" + jsonFormElement.identifier + " input").on('change', event_data, function (event) {
+
+              // Update the default text field value when the generated form changes.
+              $(jsonFormId).on('change', 'input', event_data, function (event) {
                 $(event.data.json_config_field).val(JSON.stringify(event.data.brutusin_form.getData()));
               });
             });
