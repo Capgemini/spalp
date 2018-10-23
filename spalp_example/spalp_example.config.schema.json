@@ -25,13 +25,6 @@
           "type": "string",
           "minLength": 1
         },
-        "arrayField": {
-          "type": "array",
-          "items": {
-            "required": [],
-            "properties": {}
-          }
-        },
         "arrayOfObjects": {
           "type": "array",
           "uniqueItems": true,

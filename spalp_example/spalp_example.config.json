@@ -5,10 +5,6 @@
   "appText": {
     "heading": "This is the heading",
     "body": "<p>This is the body</p><p>It contains multiple paragraphs, and is repeated bodyRepeat times</p>",
-    "arrayField": [
-      "This is an array",
-      "with multiple elements"
-    ],
     "arrayOfObjects": [
       {
         "title": "my title",
