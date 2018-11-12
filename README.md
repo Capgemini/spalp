@@ -6,6 +6,30 @@ single-page applications as pages in a Drupal site.
 This approach has been described as “Progressively Decoupled”
 - see https://dri.es/how-to-decouple-drupal-in-2018
 
+## Installation
+
+### Using Composer
+1. Include the following lines in the `repositories` section of your project's `composer.json`:
+
+        {
+            "type": "package",
+            "package": {
+                "name": "brutusin/json-forms",
+                "version": "0.0.0",
+                "type": "drupal-library",
+                "source": {
+                    "url": "https://github.com/brutusin/json-forms.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
+2. Run `composer require brutusin/json-forms`
+
+### Without Composer
+1. Download the JSON Forms library from https://github.com/brutusin/json-forms
+2. Extract it into your site's `web/libraries` directory
+
 ## App Landing Page content type
 The module defines a content type to provide a landing page for each app.
 
