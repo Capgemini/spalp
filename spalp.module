@@ -65,9 +65,13 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
     // Get the app ID.
     $app_id = $entity->get('field_spalp_app_id')->getString();
 
-    // TODO: Check if the app's module defines a library?
     // Add the extending module's library to the render array.
-    $build['#attached']['library'][] = "$app_id/$app_id";
+    $library_discovery = \Drupal::service('library.discovery');
+    $library = $library_discovery->getLibraryByName($app_id, $app_id);
+
+    if ($library) {
+      $build['#attached']['library'][] = "$app_id/$app_id";
+    }
 
     // Add a link to the app's config.
     $build['#attached']['html_head_link'][] = \Drupal::service('spalp.core')->getJsonLink($app_id);
