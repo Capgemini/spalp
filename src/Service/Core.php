@@ -210,7 +210,7 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAppNode($module, $language) {
+  public function getAppNode($module, $language = NULL) {
     $node_storage = $node = $this->entityTypeManager->getStorage('node');
 
     $query = $node_storage->getQuery()
