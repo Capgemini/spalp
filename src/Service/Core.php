@@ -218,11 +218,11 @@ class Core {
       ->condition('field_spalp_app_id', $module);
     $nids = $query->execute();
 
-    // TODO: prevent more than one node per language being created for each app.
-    $nid = end($nids);
-    $node = $node_storage->load($nid);
+    if (!empty($nids)) {
+      // TODO: prevent more than one node per language being created for each app.
+      $nid = end($nids);
+      $node = $node_storage->load($nid);
 
-    if (!empty($node)) {
       try {
       // Use the translation, if there is one.
         $node = $node->getTranslation($language);
