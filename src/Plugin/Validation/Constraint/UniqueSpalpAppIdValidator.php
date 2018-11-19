@@ -13,9 +13,10 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
   /**
    * Check that the app ID does not match an existing app ID.
    *
-   * @param mixed $items The value that should be validated
-   * @param \Symfony\Component\Validator\Constraint $constraint The constraint
-   *   for the validation
+   * @param mixed $items
+   *    The value that should be validated.
+   * @param \Symfony\Component\Validator\Constraint $constraint
+   *    The constraint for the validation.
    */
   public function validate(
     $items,
@@ -38,7 +39,6 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
    *
    * @param string $value
    *   The app id.
-   *
    * @param int $nid
    *   The id of the node being created or edited.
    *
@@ -58,4 +58,5 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
 
     return $id_exists;
   }
+
 }
