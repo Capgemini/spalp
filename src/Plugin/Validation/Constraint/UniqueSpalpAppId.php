@@ -15,4 +15,5 @@ use Symfony\Component\Validator\Constraint;
  */
 class UniqueSpalpAppId extends Constraint {
   public $notUnique = 'The app ID must be unique - another landing page already exists for %value';
+
 }
