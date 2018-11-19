@@ -218,25 +218,27 @@ class Core {
       ->condition('field_spalp_app_id', $module);
     $nids = $query->execute();
 
-    // TODO: prevent more than one node per language being created for each app.
-    $nid = end($nids);
-    $node = $node_storage->load($nid);
+    if (!empty($nids)) {
+      // TODO: prevent more than one node per language being created for each app.
+      $nid = end($nids);
+      $node = $node_storage->load($nid);
 
-    try {
+      try {
       // Use the translation, if there is one.
-      $node = $node->getTranslation($language);
-    }
-    catch (\InvalidArgumentException $exception) {
-      // If there's no relevant translation, log it.
-      $this->loggerFactory->get('spalp')->notice(
-        $this->t('Attempt to fetch non-existent translation of node @nid to @language for @module module.',
-          [
-            '@nid' => $node->id(),
-            '@language' => $language,
-            '@module' => $module,
-          ]
-        )
-      );
+        $node = $node->getTranslation($language);
+      }
+      catch (\InvalidArgumentException $exception) {
+        // If there's no relevant translation, log it.
+        $this->loggerFactory->get('spalp')->notice(
+          $this->t('Attempt to fetch non-existent translation of node @nid to @language for @module module.',
+            [
+              '@nid' => $node->id(),
+              '@language' => $language,
+              '@module' => $module,
+            ]
+          )
+        );
+      }
     }
 
     return $node;
