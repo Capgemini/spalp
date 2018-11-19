@@ -3,6 +3,7 @@
 namespace Drupal\spalp\Service;
 
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -50,6 +51,13 @@ class Core {
   protected $eventDispatcher;
 
   /**
+   * Language Manager.
+   *
+   * @var \Drupal\Core\Language\LanguageManager
+   */
+  protected $languageManager;
+
+  /**
    * Spalp Core constructor.
    *
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $loggerFactory
@@ -60,18 +68,22 @@ class Core {
    *   Event Dispatcher interface.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   EntityTypeManagerInterface.
+   * @param \Drupal\Core\Language\LanguageManagerInterface $language_manager
+   *   LanguageManagerInterface.
    */
   public function __construct(
     LoggerChannelFactoryInterface $loggerFactory,
     ModuleHandlerInterface $moduleHandler,
     EventDispatcherInterface $event_dispatcher,
-    EntityTypeManagerInterface $entity_type_manager
+    EntityTypeManagerInterface $entity_type_manager,
+    LanguageManagerInterface $language_manager
   ) {
 
     $this->loggerFactory = $loggerFactory;
     $this->moduleHandler = $moduleHandler;
     $this->eventDispatcher = $event_dispatcher;
     $this->entityTypeManager = $entity_type_manager;
+    $this->languageManager = $language_manager;
 
   }
 
@@ -107,7 +119,6 @@ class Core {
       $node->save();
 
       // TODO: translate the node.
-
       $this->loggerFactory->get('spalp')->notice(
         $this->t('Node @nid has been created for @title (@module)',
           [
@@ -219,12 +230,12 @@ class Core {
     $nids = $query->execute();
 
     if (!empty($nids)) {
-      // TODO: prevent more than one node per language being created for each app.
+      // TODO: prevent more than 1 node per language being created for each app.
       $nid = end($nids);
       $node = $node_storage->load($nid);
 
       try {
-      // Use the translation, if there is one.
+        // Use the translation, if there is one.
         $node = $node->getTranslation($language);
       }
       catch (\InvalidArgumentException $exception) {
