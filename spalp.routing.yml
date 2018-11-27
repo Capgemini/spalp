@@ -7,3 +7,10 @@ entity.node.appjson:
     _permission: 'access content'
   options:
     _node_operation_route: TRUE
+spalp.settings:
+  path: '/admin/config/system/spalp'
+  defaults:
+    _form: '\Drupal\spalp\Form\SpalpConfigForm'
+    _title: 'Single Page Application Landing Page'
+  requirements:
+    _permission: 'administer spalp'
