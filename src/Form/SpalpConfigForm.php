@@ -8,7 +8,7 @@ use Drupal\Core\Form\ConfigFormBase;
 
 
 /**
- * Provides settings for eu_cookie_compliance module.
+ * Provides settings for spalp module.
  */
 class SpalpConfigForm extends ConfigFormBase {
 
