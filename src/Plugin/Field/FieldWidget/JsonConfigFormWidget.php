@@ -74,23 +74,27 @@ class JsonConfigFormWidget extends WidgetBase implements ContainerFactoryPluginI
       '#attributes' => ['class' => ['js-text-full', 'text-full']],
     ];
 
-    $element[$delta] = [
-      '#attached' => [
-        'library' => [
-          'spalp/json-form',
-          'spalp/spalp-json-form-builder',
-        ],
-        'drupalSettings' => [
-          'spalpJsonFormBuilder' => [
-            $identifier => [
-              'schema' => $json_schema,
-              'identifier' => $identifier,
-              'textarea' => $selector,
+    $json_forms_enabled = \Drupal::config('spalp.settings')->get('json_forms_enabled');
+    if ($json_forms_enabled) {
+      $element[$delta] = [
+        '#attached' => [
+          'library' => [
+            'spalp/json-form',
+            'spalp/spalp-json-form-builder',
+          ],
+          'drupalSettings' => [
+            'spalpJsonFormBuilder' => [
+              $identifier => [
+                'schema' => $json_schema,
+                'identifier' => $identifier,
+                'textarea' => $selector,
+              ],
             ],
           ],
         ],
-      ],
-    ];
+      ];
+    }
+
     return $element;
   }
 

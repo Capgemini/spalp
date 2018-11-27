@@ -1,0 +1,5 @@
+spalp.settings:
+  title: 'Single Page Application Landing Page'
+  parent: system.admin_config_system
+  description: 'Configure global settings for the Single Page Application Landing Page module'
+  route_name: spalp.settings
