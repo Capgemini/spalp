@@ -1,0 +1,6 @@
+services:
+  spalp.commands:
+    arguments: ["@spalp.core", "@spalp.spalpconfig"]
+    class: \Drupal\spalp\Commands\SpalpCommands
+    tags:
+        - { name: drush.command }
