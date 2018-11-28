@@ -10,5 +10,12 @@
     "issues": "https://www.drupal.org/project/issues/spalp",
     "source": "http://cgit.drupalcode.org/spalp"
   },
-  "require": { }
+  "require": { },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^9"
+      }
+    }
+  }
 }
