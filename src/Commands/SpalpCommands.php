@@ -58,9 +58,10 @@ class SpalpCommands extends DrushCommands {
    */
   public function importJson($module = '') {
 
+    // If we don't have a module from the command, ask for one.
     if (empty($module)) {
       $modules = $this->spalpConfig->getAppIds();
-      $module = $this->io()->choice('Enter the module name to import', $modules);
+      $module = $this->io()->choice('Which module would you like to import configuration for?', $modules);
     }
 
     $json = $this->spalpCore->getConfigFromJson($module);
