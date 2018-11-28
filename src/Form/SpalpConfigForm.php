@@ -2,10 +2,8 @@
 
 namespace Drupal\spalp\Form;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\ConfigFormBase;
-
 
 /**
  * Provides settings for spalp module.
@@ -13,7 +11,7 @@ use Drupal\Core\Form\ConfigFormBase;
 class SpalpConfigForm extends ConfigFormBase {
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
     return [
@@ -23,12 +21,11 @@ class SpalpConfigForm extends ConfigFormBase {
   }
 
   /**
-   * @inheritdoc
+   * {@inheritdoc}
    */
   public function getFormId() {
     return 'spalp_config_form';
   }
-
 
   /**
    * {@inheritdoc}
@@ -55,4 +52,5 @@ class SpalpConfigForm extends ConfigFormBase {
       ->save();
     parent::submitForm($form, $form_state);
   }
+
 }
