@@ -1,8 +1,9 @@
 entity.node.appjson:
-  path: '/spalp/{app_id}/json'
+  path: '/spalp/{app_id}/json/{revision}'
   defaults:
     _title: 'App Data'
     _controller: '\Drupal\spalp\Controller\AppLandingJsonController::data'
+    revision: NULL
   requirements:
     _permission: 'access content'
   options:

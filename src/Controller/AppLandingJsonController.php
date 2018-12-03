@@ -53,6 +53,8 @@ class AppLandingJsonController extends ControllerBase {
    *
    * @param string $app_id
    *   The machine name of the extending module.
+   * @param int $revision
+   *   The ID of a specific revision to load.
    *
    * @return \Symfony\Component\HttpFoundation\JsonResponse
    *   The JSON output.
@@ -60,14 +62,14 @@ class AppLandingJsonController extends ControllerBase {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function data($app_id = '') {
+  public function data($app_id = '', $revision = NULL) {
     if (empty($app_id)) {
       throw new NotFoundHttpException();
     }
 
     $language = $this->languageManager->getCurrentLanguage()->getId();
 
-    $response = $this->spalpCoreService->getAppConfig($app_id, $language);
+    $response = $this->spalpCoreService->getAppConfig($app_id, $language, $revision);
 
     return new JsonResponse($response);
   }

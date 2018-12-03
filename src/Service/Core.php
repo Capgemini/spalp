@@ -174,6 +174,8 @@ class Core {
    *   The machine name of the module being installed.
    * @param string $language
    *   The language code.
+   * @param int $revision
+   *   The ID of a specific revision to load.
    *
    * @return array
    *   The text and configuration settings for the app json endpoint, as array.
@@ -181,7 +183,7 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAppConfig($module, $language = NULL) {
+  public function getAppConfig($module, $language = NULL, $revision = NULL) {
     $config = [];
 
     if ($language == NULL) {
@@ -189,11 +191,10 @@ class Core {
     }
 
     // Get the relevant node for the app.
-    $node = $this->getAppNode($module, $language);
+    $node = $this->getAppNode($module, $language, $revision);
     if (!empty($node)) {
 
-      // TODO: check permission to view the node.
-      // TODO: get a specific revision.
+      // TODO: check permission to view the node and revision.
       $config_json = $node->field_spalp_config_json->value;
       $config = Json::decode($config_json);
 
@@ -214,6 +215,8 @@ class Core {
    *   The machine name of the extending module.
    * @param string $language
    *   The language code.
+   * @param int $revision
+   *   The ID of a specific revision to load.
    *
    * @return \Drupal\Core\Entity\EntityInterface|null
    *   The applanding node for this module.
@@ -221,7 +224,7 @@ class Core {
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    */
-  public function getAppNode($module, $language = NULL) {
+  public function getAppNode($module, $language = NULL, $revision = NULL) {
     $node_storage = $node = $this->entityTypeManager->getStorage('node');
 
     $query = $node_storage->getQuery()
@@ -233,6 +236,10 @@ class Core {
       // TODO: prevent more than 1 node per language being created for each app.
       $nid = end($nids);
       $node = $node_storage->load($nid);
+
+      if (!empty($revision)) {
+        $node = $node_storage->loadRevision($revision);
+      }
 
       try {
         // Use the translation, if there is one.
@@ -260,13 +267,18 @@ class Core {
    *
    * @param string $app_id
    *   The machine name of the extending module.
+   * @param int $revision
+   *   The node revision ID.
    *
    * @return array
    *   Render array for the link.
    */
-  public function getJsonLink($app_id) {
-    // TODO: change the link if we're on a revision ID.
-    $config_url = Url::fromRoute('entity.node.appjson', ['app_id' => $app_id])->toString();
+  public function getJsonLink($app_id, $revision = NULL) {
+    $parameters = ['app_id' => $app_id];
+    if (!empty($revision)) {
+      $parameters['revision'] = $revision;
+    }
+    $config_url = Url::fromRoute('entity.node.appjson', $parameters)->toString();
     $config_json = [
       [
         'type' => 'application/json',

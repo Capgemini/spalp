@@ -74,8 +74,11 @@ function spalp_entity_view(array &$build, EntityInterface $entity, EntityViewDis
       $build['#attached']['library'][] = "$app_id/$app_id";
     }
 
+    // Are we viewing a revision?
+    $revision = \Drupal::routeMatch()->getParameter('node_revision');
+
     // Add a link to the app's config.
-    $build['#attached']['html_head_link'][] = \Drupal::service('spalp.core')->getJsonLink($app_id);
+    $build['#attached']['html_head_link'][] = \Drupal::service('spalp.core')->getJsonLink($app_id, $revision);
   }
 }
 
