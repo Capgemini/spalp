@@ -5,7 +5,7 @@ entity.node.appjson:
     _controller: '\Drupal\spalp\Controller\AppLandingJsonController::data'
     revision: NULL
   requirements:
-    _permission: 'access content'
+    _custom_access: '\Drupal\spalp\Controller\AppLandingJsonController::access'
   options:
     _node_operation_route: TRUE
 spalp.settings:
