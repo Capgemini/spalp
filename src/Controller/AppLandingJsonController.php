@@ -2,8 +2,10 @@
 
 namespace Drupal\spalp\Controller;
 
+use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Language\LanguageManagerInterface;
+use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -46,6 +48,24 @@ class AppLandingJsonController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static($container->get('spalp.core'), $container->get('language_manager'));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access(AccountInterface $account, $app_id = '', $revision = NULL) {
+
+    $node = $this->spalpCoreService->getAppNode($app_id);
+
+    // Can the user access the node?
+    $access = $node->access('view');
+
+    if ($revision) {
+      // Can the user access this revision?
+      $access = $account->hasPermission('view applanding revisions');
+    }
+
+    return AccessResult::allowedIf($access)->cachePerPermissions()->addCacheableDependency($node);
   }
 
   /**
