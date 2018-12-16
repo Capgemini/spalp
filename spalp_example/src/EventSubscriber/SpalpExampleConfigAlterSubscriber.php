@@ -37,6 +37,11 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
         $config['appConfig']['bodyRepeat'] = 5;
       }
 
+      // Add user data.
+      $config['userData'] = $this->getUserData();
+
+      // TODO: Make sure that the JSON response isn't cached with user data.
+
       $event->setConfig($config);
     }
   }
@@ -58,6 +63,23 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
     ];
 
     return in_array($host, $test_environments);
+  }
+
+  /**
+   * Provide user data to the app config.
+   *
+   * @return array
+   *   Data about the user, structured for our JS application.
+   */
+  public function getUserData() {
+    $data = [];
+
+    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+
+    $data['name'] = $user->get('name')->value;
+    $data['uid'] = $user->get('uid')->value;
+
+    return $data;
   }
 
 }
