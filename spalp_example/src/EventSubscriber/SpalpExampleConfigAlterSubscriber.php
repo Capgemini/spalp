@@ -3,6 +3,7 @@
 namespace Drupal\spalp_example\EventSubscriber;
 
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
+use Drupal\user\Entity\User;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Drupal\spalp_example\SpalpExampleInterface;
 
@@ -38,9 +39,8 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
       }
 
       // Add user data.
-      $config['userData'] = $this->getUserData();
-
       // TODO: Make sure that the JSON response isn't cached with user data.
+      $config['userData'] = $this->getUserData();
 
       $event->setConfig($config);
     }
@@ -74,7 +74,7 @@ class SpalpExampleConfigAlterSubscriber implements EventSubscriberInterface {
   public function getUserData() {
     $data = [];
 
-    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+    $user = User::load(\Drupal::currentUser()->id());
 
     $data['name'] = $user->get('name')->value;
     $data['uid'] = $user->get('uid')->value;
