@@ -3,6 +3,9 @@
 This module provides a standardised way for site managers to configure and serve
 single-page applications as pages in a Drupal site.
 
+For more information on the thinking behind this module, see
+https://capgemini.github.io/drupal/spalp/
+
 This approach has been described as “Progressively Decoupled”
 - see https://dri.es/how-to-decouple-drupal-in-2018
 
