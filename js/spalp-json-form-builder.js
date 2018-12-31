@@ -35,7 +35,12 @@
 
               // Update the default text field value when the generated form changes.
               $(jsonFormId).on('change', 'input', event_data, function (event) {
-                $(event.data.json_config_field).val(JSON.stringify(event.data.brutusin_form.getData()));
+                updateJsonFormElementData(event.data);
+              });
+
+              // Update json element field when json form item is removed.
+              $(jsonFormId + ' button.remove').on('click', event_data, function (event) {
+                updateJsonFormElementData(event.data);
               });
             });
           }
@@ -45,9 +50,19 @@
   };
 
   /**
+   * Update textarea data with values from JSON form elements.
+   *
+   * @param {Object} event_data
+   *   Data from the form change event.
+   */
+  function updateJsonFormElementData(event_data) {
+    $(event_data.json_config_field).val(JSON.stringify(event_data.brutusin_form.getData()));
+  }
+
+  /**
    * Helper function to check if element has schema attached.
    *
-   * @param array settings
+   * @param {array} settings
    *
    * @returns {boolean}
    *   True if schema and identifier is available in settings.
