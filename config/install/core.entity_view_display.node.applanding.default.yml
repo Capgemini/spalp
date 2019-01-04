@@ -31,7 +31,7 @@ content:
     region: content
   field_supporting_content:
     weight: 102
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     type: text_default
