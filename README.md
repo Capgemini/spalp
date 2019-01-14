@@ -75,6 +75,14 @@ Define a library for your assets as per https://www.drupal.org/node/2274843.
 If the library name matches your module's machine name, the spalp module
 will take care of attaching the library when the app landing node is viewed.
 
+### Using config in Drupal code
+It may be useful to access config and text in applanding nodes from elsewhere in Drupal, such as a block linking to the applanding node. This can be achieved using the `spalp.core` service:
+
+    $config = \Drupal::service('spalp.core')->getAppConfig('mymodule');
+    $name = $config['appText']['name'];
+
+See `\Drupal\spalp_example\Plugin\Block\ExampleBlock::build` for an example.
+
 ## Known Issues
 
 ### Fatal error while creating app landing page content
