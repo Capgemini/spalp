@@ -292,4 +292,52 @@ class Core {
     return $config_json;
   }
 
+  /**
+   * Set the configuration settings for an app.
+   *
+   * Set the configurations for an app without overriding existing
+   * manually-edited stored configuration.
+   *
+   * @param string $module
+   *   The machine name of the module.
+   * @param array $config_json
+   *   The configuration settings.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function setAppConfig($module, array $config_json = NULL) {
+    $config = [];
+
+    // Get config from JSON file.
+    if ($config_json === NULL) {
+      $config_json = $this->getConfigFromJson($module);
+    }
+
+    if (empty($config_json)) {
+      throw new \Exception(dt('@module does not provide JSON configuration.', [
+        '@module' => $module,
+      ]));
+    }
+
+    // Get existing config for an app.
+    $app_config = $this->getAppConfig($module);
+
+    // Merge the configs to aviod any overrides for
+    // the changes done in App config.
+    $config = NestedArray::mergeDeep($config_json, $app_config);
+
+    $node = $this->getAppNode($module);
+    if (empty($node)) {
+      throw new \Exception(dt('There is no app landing node for @module.', [
+        '@module' => $module,
+      ]));
+    }
+
+    $config_json_encode = Json::encode($config);
+    $node->set('field_spalp_config_json', $config_json_encode);
+    $node->save();
+  }
+
 }
