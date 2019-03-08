@@ -324,7 +324,7 @@ class Core {
     // Get existing config for an app.
     $app_config = $this->getAppConfig($module);
 
-    // Merge the configs to aviod any overrides for
+    // Merge the configs to avoid any overrides for
     // the changes done in App config.
     $config = NestedArray::mergeDeep($config_json, $app_config);
 
