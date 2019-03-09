@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
@@ -290,6 +291,57 @@ class Core {
     ];
 
     return $config_json;
+  }
+
+  /**
+   * Set the configuration settings for an app.
+   *
+   * @param string $module
+   *   The machine name of the module.
+   * @param array $config_json
+   *   The configuration settings.
+   * @param bool $overwrite
+   *   Whether to overwrite existing values on the node.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function setAppConfig($module, array $config_json = NULL, $overwrite = FALSE) {
+
+    // Get config from JSON file if none is provided.
+    if ($config_json === NULL) {
+      $config_json = $this->getConfigFromJson($module);
+
+      if (empty($config_json)) {
+        throw new \Exception(dt('@module does not provide JSON configuration.', [
+          '@module' => $module,
+        ]));
+      }
+    }
+
+    $node = $this->getAppNode($module);
+    if (empty($node)) {
+      throw new \Exception(dt('There is no app landing node for @module.', [
+        '@module' => $module,
+      ]));
+    }
+
+    // Get existing config from the applanding node.
+    $config_node = $this->getAppConfig($module);
+
+    // Merge the existing and new configuration.
+    if ($overwrite) {
+      // Overwrite node values with values from JSON.
+      $config = NestedArray::mergeDeep($config_node, $config_json);
+    }
+    else {
+      // Retain values in the node.
+      $config = NestedArray::mergeDeep($config_json, $config_node);
+    }
+
+    $node->set('field_spalp_config_json', Json::encode($config));
+    $node->save();
   }
 
 }
