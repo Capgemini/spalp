@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
@@ -308,7 +309,6 @@ class Core {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setAppConfig($module, array $config_json = NULL) {
-    $config = [];
 
     // Get config from JSON file.
     if ($config_json === NULL) {
