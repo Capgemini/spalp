@@ -296,19 +296,18 @@ class Core {
   /**
    * Set the configuration settings for an app.
    *
-   * Set the configurations for an app without overriding existing
-   * manually-edited stored configuration.
-   *
    * @param string $module
    *   The machine name of the module.
    * @param array $config_json
    *   The configuration settings.
+   * @param bool $overwrite
+   *   Whether to overwrite existing values on the node.
    *
    * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
-  public function setAppConfig($module, array $config_json = NULL) {
+  public function setAppConfig($module, array $config_json = NULL, $overwrite = FALSE) {
 
     // Get config from JSON file if none is provided.
     if ($config_json === NULL) {
@@ -329,14 +328,19 @@ class Core {
     }
 
     // Get existing config from the applanding node.
-    $app_config = $this->getAppConfig($module);
+    $config_node = $this->getAppConfig($module);
 
-    // Merge the configs to avoid any overrides for
-    // the changes done in App config.
-    $config = NestedArray::mergeDeep($config_json, $app_config);
+    // Merge the existing and new configuration.
+    if ($overwrite) {
+      // Overwrite node values with values from JSON.
+      $config = NestedArray::mergeDeep($config_node, $config_json);
+    }
+    else {
+      // Retain values in the node.
+      $config = NestedArray::mergeDeep($config_json, $config_node);
+    }
 
-    $config_json_encode = Json::encode($config);
-    $node->set('field_spalp_config_json', $config_json_encode);
+    $node->set('field_spalp_config_json', Json::encode($config));
     $node->save();
   }
 
