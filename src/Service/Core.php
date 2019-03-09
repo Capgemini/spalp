@@ -310,23 +310,16 @@ class Core {
    */
   public function setAppConfig($module, array $config_json = NULL) {
 
-    // Get config from JSON file.
+    // Get config from JSON file if none is provided.
     if ($config_json === NULL) {
       $config_json = $this->getConfigFromJson($module);
+
+      if (empty($config_json)) {
+        throw new \Exception(dt('@module does not provide JSON configuration.', [
+          '@module' => $module,
+        ]));
+      }
     }
-
-    if (empty($config_json)) {
-      throw new \Exception(dt('@module does not provide JSON configuration.', [
-        '@module' => $module,
-      ]));
-    }
-
-    // Get existing config for an app.
-    $app_config = $this->getAppConfig($module);
-
-    // Merge the configs to avoid any overrides for
-    // the changes done in App config.
-    $config = NestedArray::mergeDeep($config_json, $app_config);
 
     $node = $this->getAppNode($module);
     if (empty($node)) {
@@ -334,6 +327,13 @@ class Core {
         '@module' => $module,
       ]));
     }
+
+    // Get existing config from the applanding node.
+    $app_config = $this->getAppConfig($module);
+
+    // Merge the configs to avoid any overrides for
+    // the changes done in App config.
+    $config = NestedArray::mergeDeep($config_json, $app_config);
 
     $config_json_encode = Json::encode($config);
     $node->set('field_spalp_config_json', $config_json_encode);
