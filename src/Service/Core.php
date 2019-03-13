@@ -387,33 +387,33 @@ class Core {
    */
   public function arrayDiffRecursive(array $config_node, array $config_json) {
     $result = ['node_only' => [], 'json_only' => [], 'diff' => []];
-    foreach ($config_node as $k => $v) {
-      if (is_array($v) && isset($config_json[$k]) && is_array($config_json[$k])) {
-        $sub_result = $this->arrayDiffRecursive($v, $config_json[$k]);
-        foreach (array_keys($sub_result) as $key) {
-          if (!empty($sub_result[$key])) {
-            $result[$key] = array_merge_recursive($result[$key],
-              [$k => $sub_result[$key]]);
+    foreach ($config_node as $key => $value) {
+      if (is_array($value) && isset($config_json[$key]) && is_array($config_json[$key])) {
+        $sub_result = $this->arrayDiffRecursive($value, $config_json[$key]);
+        foreach (array_keys($sub_result) as $sub_key) {
+          if (!empty($sub_result[$sub_key])) {
+            $result[$sub_key] = array_merge_recursive($result[$sub_key],
+              [$key => $sub_result[$sub_key]]);
           }
         }
       }
       else {
-        if (isset($config_json[$k])) {
-          if ($v !== $config_json[$k]) {
-            $result['diff'][$k] = [
-              'node' => $v,
-              'json' => $config_json[$k],
+        if (isset($config_json[$key])) {
+          if ($value !== $config_json[$key]) {
+            $result['diff'][$key] = [
+              'node' => $value,
+              'json' => $config_json[$key],
             ];
           }
         }
         else {
-          $result['node_only'][$k] = $v;
+          $result['node_only'][$key] = $value;
         }
       }
     }
-    foreach ($config_json as $k => $v) {
-      if (!isset($config_node[$k])) {
-        $result['json_only'][$k] = $v;
+    foreach ($config_json as $key => $value) {
+      if (!isset($config_node[$key])) {
+        $result['json_only'][$key] = $value;
       }
     }
     return $result;
