@@ -2,7 +2,6 @@
 
 namespace Drupal\spalp\Service;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
@@ -333,11 +332,11 @@ class Core {
     // Merge the existing and new configuration.
     if ($overwrite) {
       // Overwrite node values with values from JSON.
-      $config = NestedArray::mergeDeep($config_node, $config_json);
+      $config = array_merge($config_node, $config_json);
     }
     else {
       // Retain values in the node.
-      $config = NestedArray::mergeDeep($config_json, $config_node);
+      $config = array_merge($config_json, $config_node);
     }
 
     $node->set('field_spalp_config_json', Json::encode($config));
