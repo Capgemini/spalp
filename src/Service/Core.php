@@ -343,4 +343,79 @@ class Core {
     $node->save();
   }
 
+  /**
+   * Get the difference between config in the JSON file and the applanding node.
+   *
+   * @param string $module
+   *
+   * @return array
+   *   Associative array of differences.
+   *   'node_only': in the node, but not in JSON for the module.
+   *   'json_only': in JSON, but not in the node.
+   *   'diff': in both arrays, with different values.
+   *   - 'node': the value on the node.
+   *   - 'json': the value in JSON.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   */
+  public function getAppConfigDiff($module) {
+    $config_node = $this->getAppConfig($module);
+    $config_json = $this->getConfigFromJson($module);
+
+    $diff = $this->array_diff_recursive($config_node, $config_json);
+
+    return array_filter($diff);
+  }
+
+  /**
+   * Recursively compare two arrays.
+   *
+   * @param array $config_node
+   *   The configuration array from the applanding node.
+   * @param array $config_json
+   *   The configuration array from the JSON file.
+   *
+   * @return array
+   *   Associative array of differences.
+   *   'node_only': in $config_node, but not $config_json
+   *   'json_only': in $config_json, but not $config_node
+   *   'diff': in both arrays, with different values.
+   *   - 'node': the value in $config_node
+   *   - 'json': the value in $config_json
+   */
+  public function array_diff_recursive($config_node, $config_json) {
+    $result = ['node_only' => [], 'json_only' => [], 'diff' => []];
+    foreach ($config_node as $k => $v) {
+      if (is_array($v) && isset($config_json[$k]) && is_array($config_json[$k])) {
+        $sub_result = $this->array_diff_recursive($v, $config_json[$k]);
+        foreach (array_keys($sub_result) as $key) {
+          if (!empty($sub_result[$key])) {
+            $result[$key] = array_merge_recursive($result[$key],
+              [$k => $sub_result[$key]]);
+          }
+        }
+      }
+      else {
+        if (isset($config_json[$k])) {
+          if ($v !== $config_json[$k]) {
+            $result['diff'][$k] = [
+              'node' => $v,
+              'json' => $config_json[$k],
+            ];
+          }
+        }
+        else {
+          $result['node_only'][$k] = $v;
+        }
+      }
+    }
+    foreach ($config_json as $k => $v) {
+      if (!isset($config_node[$k])) {
+        $result['json_only'][$k] = $v;
+      }
+    }
+    return $result;
+  }
+
 }

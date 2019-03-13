@@ -89,7 +89,7 @@ class SpalpCommands extends DrushCommands {
   }
 
   /**
-   * Output the current config on the applanding node for a module.
+   * Show the difference between config on the applanding node and in JSON.
    *
    * @param string $module
    *   The machine name of the module.
@@ -98,10 +98,54 @@ class SpalpCommands extends DrushCommands {
    * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
    * @throws \Drush\Exceptions\UserAbortException
    *
+   * @command spalp:config-diff
+   * @aliases scd
+   */
+  public function configDiff($module = '') {
+    // If we don't have a module from the command, ask for one.
+    if (empty($module)) {
+      $modules = $this->spalpConfig->getAppIds();
+      $module = $this->io()->choice('Which module would you like to import configuration for?', $modules);
+    }
+
+    $json = $this->spalpCore->getConfigFromJson($module);
+    if (empty($json)) {
+      throw new \Exception(dt('@module does not provide JSON configuration.', [
+        '@module' => $module,
+      ]));
+    }
+
+    $node = $this->spalpCore->getAppNode($module);
+    if (empty($node)) {
+      throw new \Exception(dt('There is no app landing node for @module.', [
+        '@module' => $module,
+      ]));
+    }
+
+    $diff = $this->spalpCore->getAppConfigDiff($module);
+    $this->logger()->success(dt('Configuration diff between node @nid and JSON for @module: @diff', [
+      '@nid' => $node->id(),
+      '@module' => $module,
+      '@diff' => print_r($diff, 1),
+    ]));
+
+  }
+
+  /**
+   * Output the current config on the applanding node for a module.
+   *
+   * @param string $module
+   *   The machine name of the module.
+   *
+   * @param string $file
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drush\Exceptions\UserAbortException
    * @command spalp:config-export
    * @aliases sce
    */
-  public function configExport($module = '') {
+  public function configExport($module = '', $file = '') {
     // If we don't have a module from the command, ask for one.
     if (empty($module)) {
       $modules = $this->spalpConfig->getAppIds();
@@ -115,9 +159,15 @@ class SpalpCommands extends DrushCommands {
       ]));
     }
 
+    // Output to the module-defined file.
+    if (empty($file)) {
+
+    }
+
     $config = $this->spalpCore->getAppConfig($module);
 
     // TODO: output to a file?
+
     $this->logger()->success(dt('Current config on node @nid for @module: @config', [
         '@nid' => $node->id(),
         '@module' => $module,
