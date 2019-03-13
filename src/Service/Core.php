@@ -347,6 +347,7 @@ class Core {
    * Get the difference between config in the JSON file and the applanding node.
    *
    * @param string $module
+   *   The machine name of the module.
    *
    * @return array
    *   Associative array of differences.
@@ -363,7 +364,7 @@ class Core {
     $config_node = $this->getAppConfig($module);
     $config_json = $this->getConfigFromJson($module);
 
-    $diff = $this->array_diff_recursive($config_node, $config_json);
+    $diff = $this->arrayDiffRecursive($config_node, $config_json);
 
     return array_filter($diff);
   }
@@ -384,11 +385,11 @@ class Core {
    *   - 'node': the value in $config_node
    *   - 'json': the value in $config_json
    */
-  public function array_diff_recursive($config_node, $config_json) {
+  public function arrayDiffRecursive(array $config_node, array $config_json) {
     $result = ['node_only' => [], 'json_only' => [], 'diff' => []];
     foreach ($config_node as $k => $v) {
       if (is_array($v) && isset($config_json[$k]) && is_array($config_json[$k])) {
-        $sub_result = $this->array_diff_recursive($v, $config_json[$k]);
+        $sub_result = $this->arrayDiffRecursive($v, $config_json[$k]);
         foreach (array_keys($sub_result) as $key) {
           if (!empty($sub_result[$key])) {
             $result[$key] = array_merge_recursive($result[$key],
