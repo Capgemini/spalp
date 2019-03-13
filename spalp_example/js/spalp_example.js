@@ -6,7 +6,7 @@
  * framework (or vanilla JavaScript).
  */
 
-(function($, Drupal) {
+(function ($, Drupal) {
   Drupal.spalpExample = { app_id: "spalp_example" };
 
   Drupal.behaviors.spalpExample = {
@@ -21,9 +21,10 @@
 
   /**
    * Get the config from JSON.
+   *
    * @return configuration data.
    */
-  Drupal.spalpExample.getConfig = function() {
+  Drupal.spalpExample.getConfig = function () {
     const configURL = $("#appConfig").attr("href");
     let config = {};
 
@@ -40,7 +41,7 @@
    * @param {object} config
    *   The JSON object with the app configuration.
    */
-  Drupal.spalpExample.addContent = function(config) {
+  Drupal.spalpExample.addContent = function (config) {
     Drupal.spalpExample.printAppTexts(Drupal.spalpExample.app_id, config);
   };
 
@@ -52,7 +53,7 @@
    * @param {object} data
    *   The JSON object with the app text.
    */
-  Drupal.spalpExample.printAppTexts = function(appWrapper, data) {
+  Drupal.spalpExample.printAppTexts = function (appWrapper, data) {
     const $appWrapper = $(`#${appWrapper}`);
 
     /*
