@@ -14,9 +14,9 @@ class UniqueSpalpAppIdValidator extends ConstraintValidator {
    * Check that the app ID does not match an existing app ID.
    *
    * @param mixed $items
-   *    The value that should be validated.
+   *   The value that should be validated.
    * @param \Symfony\Component\Validator\Constraint $constraint
-   *    The constraint for the validation.
+   *   The constraint for the validation.
    */
   public function validate(
     $items,
