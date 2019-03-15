@@ -2,6 +2,7 @@
 
 namespace Drupal\spalp\Service;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\spalp\Event\SpalpConfigAlterEvent;
@@ -328,19 +329,35 @@ class Core {
 
     // Get existing config from the applanding node.
     $config_node = $this->getAppConfig($module);
-
-    // Merge the existing and new configuration.
-    if ($overwrite) {
-      // Overwrite node values with values from JSON.
-      $config = array_merge($config_node, $config_json);
-    }
-    else {
-      // Retain values in the node.
-      $config = array_merge($config_json, $config_node);
-    }
+    $config = $this->newAppConfig($config_node, $config_json, $overwrite);
 
     $node->set('field_spalp_config_json', Json::encode($config));
     $node->save();
+
+  }
+
+  /**
+   * @param array $config_node
+   *   The current configuration on the applanding node.
+   * @param array $config_json
+   *   The configuration
+   * @param bool $overwrite
+   *
+   * @return array
+   *   The merged configuration array.
+   */
+  public function newAppConfig($config_node, $config_json, $overwrite = FALSE) {
+    // Merge the existing and new configuration.
+    if ($overwrite) {
+      // Overwrite node values with values from JSON.
+      $config = NestedArray::mergeDeepArray([$config_node, $config_json], TRUE);
+    }
+    else {
+      // Retain values in the node.
+      $config = NestedArray::mergeDeepArray([$config_json, $config_node], TRUE);
+    }
+
+    return $config;
   }
 
   /**
