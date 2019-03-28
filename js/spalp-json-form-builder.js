@@ -23,9 +23,20 @@
               const container = document.getElementById(jsonFormElement.identifier);
               const brutusin_form_instance = brutusin_forms.create(jsonFormElement.schema);
               const data = $(jsonFormElement.textarea).val() || '{}';
+              const json_data = JSON.parse(data);
+
+              // Set selected 'select' elements option from existing data.
+              brutusin_forms.addDecorator(function (element, schema) {
+                if (element.tagName) {
+                  if (element.tagName.toLowerCase() === "select") {
+                    const value = jsonValueFromPath(json_data, schema.$id);
+                    $(element).val(value);
+                  }
+                }
+              });
 
               // Replace the default text field with a generated form.
-              brutusin_form_instance.render(container, JSON.parse(data));
+              brutusin_form_instance.render(container, json_data);
               $(jsonFormElement.textarea).hide();
 
               const event_data = {
@@ -34,7 +45,7 @@
               };
 
               // Update the default text field value when the generated form changes.
-              $(jsonFormId).on('change', 'input', event_data, function (event) {
+              $(jsonFormId).on('change', 'input, select', event_data, function (event) {
                 updateJsonFormElementData(event.data);
               });
 
@@ -48,6 +59,27 @@
       }
     }
   };
+
+  /**
+   * Given an objectified JSON string, return a value for a given element path.
+   *
+   * @param json
+   *   Object representing the JSON data.
+   * @param path
+   *   A dot separated path to the JSON data's element value required
+   *
+   * @return {string|int}
+   *   Value of the JSON data specified in the path parameter.
+   */
+  function jsonValueFromPath(json, path) {
+    const path_chunks = path.split('.');
+    // The json-forms schema paths are prefixed with '$.'.
+    const root = path_chunks.shift();
+
+    return path_chunks.reduce(function(obj, key) {
+      return obj && obj[key];
+    }, json);
+  }
 
   /**
    * Update textarea data with values from JSON form elements.
