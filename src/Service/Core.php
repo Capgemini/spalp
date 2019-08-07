@@ -119,7 +119,6 @@ class Core {
       $node->enforceIsNew();
       $node->save();
 
-      // TODO: translate the node.
       $this->loggerFactory->get('spalp')->notice(
         $this->t('Node @nid has been created for @title (@module)',
           [
@@ -129,6 +128,36 @@ class Core {
           ]
         )
       );
+
+      // Translate the node.
+      $languages = $this->languageManager->getLanguages();
+      foreach ($languages as $langcode => $language) {
+        if (!$language->isDefault()) {
+          // Get the JSON config for this language.
+          $jsonTranslation = $this->getConfigFromJson($module, 'config', $langcode);
+
+          // If the config is different from the default, add a translation.
+          if ($jsonTranslation != $json) {
+            $translation = $node->addTranslation($langcode);
+            $translation->set('title', $title);
+            $translation->set('field_spalp_app_id', $module);
+            $config_json = Json::encode($json);
+            $translation->set('field_spalp_config_json', $config_json);
+            $translation->save();
+
+            $this->loggerFactory->get('spalp')->notice(
+              $this->t('Node @nid has been translated to @language for @title (@module)',
+                [
+                  '@title' => $title,
+                  '@module' => $module,
+                  '@nid' => $translation->id(),
+                  '@language' => $language->getName(),
+                ]
+              )
+            );
+          }
+        }
+      }
     }
   }
 
@@ -139,17 +168,25 @@ class Core {
    *   The machine name of the module.
    * @param string $type
    *   Type to be used for schema json calls.
+   * @param string $language
+   *   The language code.
    *
    * @return array
    *   Array representation of the configuration settings.
    */
-  public function getConfigFromJson($module, $type = 'config') {
+  public function getConfigFromJson($module, $type = 'config', $language = '') {
     $json = [];
 
     // Set up default paths to config files.
     $module_path = DRUPAL_ROOT . '/' . drupal_get_path('module', $module);
+
+    $base_filename = $module;
+    if (!empty($language)) {
+      $base_filename .= ".$language";
+    }
+
     $config_locations = [
-      'config' => $module_path . "/{$module}.config.json",
+      'config' => $module_path . "/{$base_filename}.config.json",
       'schema' => $module_path . "/{$module}.config.schema.json",
     ];
 
