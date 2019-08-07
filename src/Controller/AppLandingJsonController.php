@@ -4,6 +4,7 @@ namespace Drupal\spalp\Controller;
 
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Language\LanguageInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -87,7 +88,7 @@ class AppLandingJsonController extends ControllerBase {
       throw new NotFoundHttpException();
     }
 
-    $language = $this->languageManager->getCurrentLanguage()->getId();
+    $language = $this->languageManager->getCurrentLanguage(LanguageInterface::TYPE_CONTENT)->getId();
 
     $response = $this->spalpCoreService->getAppConfig($app_id, $language, $revision);
 
