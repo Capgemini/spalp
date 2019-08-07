@@ -132,14 +132,30 @@ class Core {
       // Translate the node.
       $languages = $this->languageManager->getLanguages();
       foreach ($languages as $langcode => $language) {
-        // Exclude default language.
         if (!$language->isDefault()) {
-          $translation = $node->addTranslation($langcode);
-          // TODO: only add a translation if the config is different from the default?
-          $json = $this->getConfigFromJson($module, 'config', $langcode);
-          $config_json = Json::encode($json);
-          $translation->set('field_spalp_config_json', $config_json);
-          $translation->save();
+          // Get the JSON config for this language.
+          $jsonTranslation = $this->getConfigFromJson($module, 'config', $langcode);
+
+          // If the config is different from the default, add a translation.
+          if ($jsonTranslation != $json) {
+            $translation = $node->addTranslation($langcode);
+            $translation->set('title', $title);
+            $translation->set('field_spalp_app_id', $module);
+            $config_json = Json::encode($json);
+            $translation->set('field_spalp_config_json', $config_json);
+            $translation->save();
+
+            $this->loggerFactory->get('spalp')->notice(
+              $this->t('Node @nid has been translated to @language for @title (@module)',
+                [
+                  '@title' => $title,
+                  '@module' => $module,
+                  '@nid' => $translation->id(),
+                  '@language' => $language->getName(),
+                ]
+              )
+            );
+          }
         }
       }
     }
