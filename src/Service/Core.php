@@ -186,8 +186,8 @@ class Core {
     }
 
     $config_locations = [
-      'config' => $module_path . "/{$base_filename}.config.json",
-      'schema' => $module_path . "/{$module}.config.schema.json",
+      'config' => $module_path . "/config/spalp/{$base_filename}.config.json",
+      'schema' => $module_path . "/config/spalp/{$module}.config.schema.json",
     ];
 
     // Allow modules to change the config path.
