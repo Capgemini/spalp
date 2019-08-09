@@ -61,14 +61,17 @@ a <div> element on the node view.
 This can be used as your main app element.
 
 ### Default configuration and application text
-Create a JSON file in your module directory called  mymodule.config.json.
-See spalp_example.config.json for an example of the structure.
+Create a JSON file in your module directory called `config/spalp/mymodule.config.json`.
+See [spalp_example.config.json](https://git.drupalcode.org/project/spalp/blob/8.x-1.x/spalp_example/config/spalp/spalp_example.config.json) for an example of the structure.
 
 When your module is installed, an unpublished `applanding` node will be created,
 with the module name selected as the `field_spalp_app_id` value.
 
 `appConfig` and `appText` values will be stored on the node's
  `field_spalp_config_json` field.
+ 
+Generate a JSON schema file at `config/spalp/mymodule.config.schema.json`. This is used by the [JSON Forms library](https://github.com/brutusin/json-forms) to build an editing form for the JSON field. 
+
 
 ### Adding your app's assets
 Define a library for your assets as per https://www.drupal.org/node/2274843.
