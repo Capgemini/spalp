@@ -99,8 +99,6 @@ class Core {
    * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function createNodes($module) {
-    // TODO: get config from YAML.
-    // TODO: translate the node.
     $title = $this->moduleHandler->getName($module);
 
     // Import the configuration and text.
@@ -113,11 +111,6 @@ class Core {
 
       $config_json = Json::encode($json);
       $node->set('field_spalp_config_json', $config_json);
-
-      // The node should initially be unpublished.
-      $node->status = 0;
-      $node->enforceIsNew();
-      $node->save();
 
       $this->loggerFactory->get('spalp')->notice(
         $this->t('Node @nid has been created for @title (@module)',
@@ -138,19 +131,18 @@ class Core {
 
           // If the config is different from the default, add a translation.
           if ($jsonTranslation != $json) {
-            $translation = $node->addTranslation($langcode);
-            $translation->set('title', $title);
-            $translation->set('field_spalp_app_id', $module);
-            $config_json = Json::encode($json);
-            $translation->set('field_spalp_config_json', $config_json);
-            $translation->save();
+            $fields = [
+              'title' => $title,
+              'field_spalp_config_json' => Json::encode($jsonTranslation),
+            ];
+            $node->addTranslation($langcode, $fields);
 
             $this->loggerFactory->get('spalp')->notice(
               $this->t('Node @nid has been translated to @language for @title (@module)',
                 [
                   '@title' => $title,
                   '@module' => $module,
-                  '@nid' => $translation->id(),
+                  '@nid' => $node->id(),
                   '@language' => $language->getName(),
                 ]
               )
@@ -158,6 +150,11 @@ class Core {
           }
         }
       }
+
+      // The node should initially be unpublished.
+      $node->status = 0;
+      $node->enforceIsNew();
+      $node->save();
     }
   }
 
