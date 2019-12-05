@@ -278,7 +278,9 @@ class Core {
 
       try {
         // Use the translation, if there is one.
-        $node = $node->getTranslation($language);
+        if (!empty($language)) {
+          $node = $node->getTranslation($language);
+        }
       }
       catch (\InvalidArgumentException $exception) {
         // If there's no relevant translation, log it.
