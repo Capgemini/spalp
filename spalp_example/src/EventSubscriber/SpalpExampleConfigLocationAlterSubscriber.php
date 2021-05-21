@@ -34,8 +34,8 @@ class SpalpExampleConfigLocationAlterSubscriber implements EventSubscriberInterf
       // TODO: proper dependency injection example.
       $module_path = drupal_get_path('module', 'spalp_example');
       $locations = [
-        'config' => $module_path . '/spalp_example.config.json',
-        'schema' => $module_path . '/spalp_example.config.schema.json',
+        'config' => $module_path . '/config/spalp/spalp_example.config.json',
+        'schema' => $module_path . '/config/spalp/spalp_example.config.schema.json',
       ];
 
       $event->setConfigLocations($locations);

@@ -20,7 +20,7 @@ class SpalpCoreTest extends UnitTestCase {
     parent::setUp();
     $loggerFactory = $this->createMock('\Drupal\Core\Logger\LoggerChannelFactoryInterface');
     $moduleHandler = $this->createMock('\Drupal\Core\Extension\ModuleHandlerInterface');
-    $event_dispatcher = $this->createMock('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
+    $event_dispatcher = $this->createMock('\Symfony\Contracts\EventDispatcher\EventDispatcherInterface');
     $entity_type_manager = $this->createMock('\Drupal\Core\Entity\EntityTypeManagerInterface');
     $language_manager = $this->getMockBuilder('\Drupal\Core\Language\LanguageManagerInterface')->disableOriginalConstructor()->getMock();
 

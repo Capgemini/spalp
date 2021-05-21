@@ -105,7 +105,9 @@ function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterfac
  * Implements hook_modules_installed().
  */
 function spalp_modules_installed($modules) {
-  $module_list = system_rebuild_module_data();
+  /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list_service */
+  $module_list_service = \Drupal::service("extension.list.module");
+  $module_list = $module_list_service->getList();
 
   foreach ($modules as $module) {
     // Does the module have a dependency on spalp?

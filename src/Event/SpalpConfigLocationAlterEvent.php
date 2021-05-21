@@ -2,7 +2,7 @@
 
 namespace Drupal\spalp\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Class SpalpConfigLocationAlterEvent.
