@@ -106,7 +106,7 @@ function spalp_get_app_ids(FieldStorageConfig $definition, ContentEntityInterfac
  */
 function spalp_modules_installed($modules) {
   /** @var \Drupal\Core\Extension\ModuleExtensionList $module_list_service */
-  $module_list_service = \Drupal::service("extension.list.module");
+  $module_list_service = \Drupal::service('extension.list.module');
   $module_list = $module_list_service->getList();
 
   foreach ($modules as $module) {
