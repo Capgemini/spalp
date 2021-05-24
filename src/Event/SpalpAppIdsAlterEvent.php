@@ -2,7 +2,7 @@
 
 namespace Drupal\spalp\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Drupal\Component\EventDispatcher\Event;
 
 /**
  * Event that is fired when there is request for collecting available app ids.

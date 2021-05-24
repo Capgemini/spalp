@@ -3,7 +3,7 @@
 namespace Drupal\spalp\Service;
 
 use Drupal\spalp\Event\SpalpAppIdsAlterEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Spalp Config Service.
@@ -15,14 +15,14 @@ class SpalpConfig {
   /**
    * An event dispatcher instance to use for configuration events.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
   /**
    * SpalpConfig constructor.
    *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Injected event dispatcher dependency.
    */
   public function __construct(EventDispatcherInterface $event_dispatcher) {
@@ -41,7 +41,7 @@ class SpalpConfig {
 
     // Instantiate the event and dispatch for changes.
     $event = new SpalpAppIdsAlterEvent($ids);
-    $this->eventDispatcher->dispatch(SpalpAppIdsAlterEvent::APP_IDS_ALTER, $event);
+    $this->eventDispatcher->dispatch($event, SpalpAppIdsAlterEvent::APP_IDS_ALTER);
 
     // Return updated ids from event.
     return $event->getIds();

@@ -12,7 +12,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\spalp\Event\SpalpConfigLocationAlterEvent;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Spalp Core Service.
@@ -47,7 +47,7 @@ class Core {
   /**
    * Event Dispatcher.
    *
-   * @var \Drupal\Core\Extension\EventDispatcherInterface
+   * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface
    */
   protected $eventDispatcher;
 
@@ -65,7 +65,7 @@ class Core {
    *   LoggerChannelFactory.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $moduleHandler
    *   Module Handler Interface.
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $event_dispatcher
+   * @param \Symfony\Contracts\EventDispatcher\EventDispatcherInterface $event_dispatcher
    *   Event Dispatcher interface.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   EntityTypeManagerInterface.
@@ -189,7 +189,7 @@ class Core {
 
     // Allow modules to change the config path.
     $event = new SpalpConfigLocationAlterEvent($module, $config_locations);
-    $this->eventDispatcher->dispatch(SpalpConfigLocationAlterEvent::CONFIG_LOCATION_ALTER, $event);
+    $this->eventDispatcher->dispatch($event, SpalpConfigLocationAlterEvent::CONFIG_LOCATION_ALTER);
     $config_locations = $event->getConfigLocations();
 
     // Get the JSON from the file.
@@ -235,7 +235,7 @@ class Core {
 
       // Dispatch event to allow modules to change config.
       $event = new SpalpConfigAlterEvent($module, $config);
-      $this->eventDispatcher->dispatch(SpalpConfigAlterEvent::APP_CONFIG_ALTER, $event);
+      $this->eventDispatcher->dispatch($event, SpalpConfigAlterEvent::APP_CONFIG_ALTER);
 
       $config = $event->getConfig();
     }
